@@ -1,0 +1,54 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-dark">
+	<a class="navbar-brand" href="#"> <img src="images/navbar.png"
+		width="30" height="30" alt="">
+	</a>
+	<button class="navbar-toggler" type="button" data-toggle="collapse"
+		data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup"
+		aria-expanded="false" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+	</button>
+	<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+		<div class="navbar-nav">
+			<a class="nav-item nav-link active" href="index.jsp"><fmt:message
+					key="header_jspf.nav.home"  bundle="${bundle}"/><span class="sr-only">(current)</span></a>
+			<a class="nav-item nav-link" href="controller?command=catalog"><fmt:message
+					key="header_jspf.nav.catalog" bundle="${bundle}" /></a> <a class="nav-item nav-link"
+				href="controller?command=cart"><fmt:message
+					key="header_jspf.nav.cart"  bundle="${bundle}"/> <span class="badge badge-light"><c:out
+						value="${inside }" /></span></a>
+			<c:if test="${empty user and title ne 'Login'}">
+				<a class="nav-item nav-link" href="login.jsp"><fmt:message
+						key="header_jspf.nav.login"  bundle="${bundle}"/></a>
+			</c:if>
+		</div>
+		<div class="navbar-nav right">
+			<c:if test="${not empty user }">
+				<a class="nav-item nav-link" href="controller?command=allOrders">${user.name }</a>
+				<c:if test="${userRole.name == 'admin' }">
+					<a class="nav-item nav-link" href="controller?command=listClients"><fmt:message
+							key="header_jspf.nav.clients"  bundle="${bundle}"/></a>
+				</c:if>
+				<a class="nav-item nav-link" href="controller?command=logout"><fmt:message
+						key="header_jspf.nav.logout" bundle="${bundle}" /></a>
+			</c:if>
+			<div class="btn-group btn-group-toggle" data-toggle="buttons">
+				<c:if test="${locale == 'ru' }">
+					<label class="btn btn-secondary active"> 
+						<a class="localea" href="controller?command=changeLocale&newLocale=ru">ru</a>
+					</label> 
+					<label class="btn btn-secondary"> 
+						<a class="localea" href="controller?command=changeLocale&newLocale=en">en</a>
+					</label>
+				</c:if>
+				<c:if test="${locale != 'ru' }">
+					<label class="btn btn-secondary"> 
+						<a class="localea" href="controller?command=changeLocale&newLocale=ru">ru</a>
+					</label> 
+					<label class="btn btn-secondary active"> 
+						<a class="localea" href="controller?command=changeLocale&newLocale=en">en</a>
+					</label>
+				</c:if>
+			</div>
+		</div>
+	</div>
+</nav>

@@ -1,0 +1,255 @@
+html, body {
+	height: 100%;
+	min-height: 90%;
+	background: #e9ecef;
+}
+
+.navbar-brand {
+	color: #fff;
+}
+.nav-link{ 
+	color: #fff!important;
+}
+.nav-link:hover{ 
+	background: #f4f4f4; 
+	color: #000!important;
+}
+.navbar-collapse{ 
+	justify-content: space-around;
+}
+.navbar-nav {
+	justify-content: flex-end;
+}
+#sticky-footer {
+	color:#fff;
+}
+.content {
+	min-height: 100vh;
+	background: #e9ecef;
+}
+.custom-select {
+	max-width: 50%;
+}
+.sorter {
+	display: flex;
+	padding: 50px 0; 
+	width: 50%;
+	margin:0 auto;
+	justify-content: space-around;
+	align-items: center;
+}
+.cells {
+	max-width: 70%;
+	margin: 0 auto;
+}
+.table {
+	text-align: left;
+
+}
+.login {
+	min-height: 90%;
+	background: #e9ecef;
+}
+.form-login {
+	max-width: 50%;
+	margin: 0 auto;
+	padding-top: 100px;
+}
+.under {
+	display: flex;
+	justify-content: flex-start;
+	align-items: flex-start;
+}
+.localea, .localea:hover {
+	color: #fff!important;
+	text-transform: none;
+	display: block;
+	height: 100%;
+	text-decoration: none;
+}
+.reg {
+	min-height: 90%;
+	background: #e9ecef;
+}
+.well {
+	max-width: 50%;
+	margin: 0 auto;
+	padding-top: 100px;
+}
+.size {
+	text-align: center;
+}
+.cart-h2 {
+	padding-top: 50px;  
+}
+.cart {
+	display: flex;
+	justify-content: space-around;
+	align-items: flex-start;
+}
+.jumbotron {
+	padding: 50px!important;
+	margin: 0!important;
+}
+.cells-cart, .cells-users {
+	width: 70%;
+	margin: 0 auto;
+	min-height: 100vh;
+}
+.right {
+	text-transform: capitalize;
+    text-align: left;
+}
+.nameProduct {
+	text-align: left;
+}
+.form-admin {
+	display: flex;
+	justify-content: flex-start;
+}
+.insert-button {
+	width: 50%;
+	margin: 0 auto;
+}
+.interval input {
+	width: 60px;
+}
+.interval p {
+	padding: 0;
+	margin: 0;
+}
+
+.update-form {
+	width: 25%;
+	margin: 50px auto;
+}
+
+.item {
+	display: flex;
+	justify-content: center;
+	width: 60%;
+	margin: 0 auto;
+	padding-top: 100px;
+}
+
+.image img{
+	width: 400px;
+	height: 400px;
+	margin: 0 50px;
+}
+
+.btn-circle {
+    width: 40px;
+    height: 40px;
+    text-align: left!important;
+    padding-left: 0;
+    padding-right: 0;
+    font-size: 16px;
+}
+
+.btn-qt {
+    width: 38px;
+    height: 38px;
+    border-radius: 40px!important;
+    text-align: center;
+    padding-left: 0;
+    padding-right: 0;
+    font-size: 16px;
+}
+
+.info-product {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.gender {
+	display: flex;
+	justify-content: center;
+	padding-top: 100px;
+	height: 70%;
+}
+.female {
+	background: #ffa500;
+	width: 25%;
+}
+.female a:hover {
+	background: #ff8500;
+	text-decoration: none;
+}
+.gender span {
+	color: #000;
+
+}
+.gender a {
+	display: block;
+	height: 100%;
+	text-align: center;
+	text-transform: uppercase;
+	font-size: 26px;
+	padding-top: 40%;
+}
+.male a:hover {
+	background: #cd00ad;
+	text-decoration: none;
+}
+.male {
+	background: #cd00cd;
+	width: 25%;
+}
+
+
+.type {
+	display: flex;
+	justify-content: center;
+	padding-top: 100px;
+	height: 70%;
+}
+.winter {
+	background: #c6e6fb;
+	width: 25%;
+}
+.winter a:hover {
+	background: #c6c6fb;
+	text-decoration: none;
+}
+.type span {
+	color: #000;
+
+}
+.type a {
+	display: block;
+	height: 100%;
+	text-align: center;
+	text-transform: uppercase;
+	font-size: 26px;
+	padding-top: 40%;
+}
+.demi-season a:hover {
+	background: #cd00ad;
+	text-decoration: none;
+}
+.demi-season {
+	background: #cd00cd;
+	width: 25%;
+}
+
+.summer a:hover {
+	background: #f9b71c;
+	text-decoration: none;
+}
+.summer {
+	background: #f9d71c;
+	width: 25%;
+}
+
+.breadcrumb {
+	width: 50%;
+	margin: 0 auto;
+	padding-top: 50px; 
+}
+.search {
+	width: 50%;
+	padding-top: 50px;
+	margin: 0 auto;
+}
