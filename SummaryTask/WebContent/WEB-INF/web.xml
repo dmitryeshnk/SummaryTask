@@ -60,7 +60,7 @@
 		<filter-class>ua.nure.yeshenko.SummaryTask.web.filter.CommandAccessFilter</filter-class>
 		<init-param>
 			<param-name>admin</param-name>
-			<param-value>listClients insertProduct updateProduct confirm</param-value>
+			<param-value>listClients insertProduct updateProduct confirm orderStatus deleteProduct</param-value>
 		</init-param>
 		<init-param>
 			<param-name>client</param-name>
@@ -78,7 +78,7 @@
 		</init-param>
 		<init-param>
 			<param-name>out-of-control</param-name>
-			<param-value>login register catalog cart changeLocale choice orderCart deleteFromCart search</param-value>
+			<param-value>login register catalog cart changeLocale choice orderCart deleteFromCart search changeQuantity sorter getImage</param-value>
 		</init-param>
 	</filter>
 	<filter-mapping>

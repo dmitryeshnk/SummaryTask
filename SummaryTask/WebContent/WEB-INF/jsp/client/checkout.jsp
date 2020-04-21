@@ -29,12 +29,12 @@
 						<c:set var="count" value="0" />
 						<c:forEach items="${cart.cart }" var="item">
 							<tr>
-								<th scope="row">${item.name}</th>
-								<td>${item.size}</td>
-								<td>${item.price}</td>
-								<td>${item.type}</td>
-								<td>${item.gender}</td>
-								<c:set var="total" value="${total + item.price }" />
+								<th scope="row">${item.key.name}</th>
+								<td>${item.key.size}</td>
+								<td>${item.key.price}</td>
+								<td>${item.key.type}</td>
+								<td>${item.key.gender}</td>
+								<c:set var="total" value="${total + (item.key.price*item.value) }" />
 								<c:set var="count" value="${count + 1 }" />
 							</tr>
 						</c:forEach>

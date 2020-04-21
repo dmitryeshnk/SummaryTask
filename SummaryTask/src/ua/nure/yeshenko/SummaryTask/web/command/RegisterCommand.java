@@ -1,30 +1,36 @@
 package ua.nure.yeshenko.SummaryTask.web.command;
 
+import static ua.nure.yeshenko.SummaryTask.util.RequestResponceUtil.createForwardResult;
+import static ua.nure.yeshenko.SummaryTask.util.RequestResponceUtil.createRedirectResult;
+
 import java.io.IOException;
+
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import org.apache.log4j.Logger;
 
 import ua.nure.yeshenko.SummaryTask.Path;
-import ua.nure.yeshenko.SummaryTask.db.Role;
 import ua.nure.yeshenko.SummaryTask.db.UserDAO;
+import ua.nure.yeshenko.SummaryTask.db.entity.Role;
 import ua.nure.yeshenko.SummaryTask.db.entity.User;
-import ua.nure.yeshenko.SummaryTask.exception.AppException;
-import ua.nure.yeshenko.SummaryTask.model.ProcessResult;
+import ua.nure.yeshenko.SummaryTask.model.RequestResult;
 import ua.nure.yeshenko.SummaryTask.util.EmailValidator;
-import static ua.nure.yeshenko.SummaryTask.util.ProccessUtil.createRedirectResult;
-import static ua.nure.yeshenko.SummaryTask.util.ProccessUtil.createForwardResult;
 
 public class RegisterCommand extends Command {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 2584645765009052911L;
 	private static final Logger log = Logger.getLogger(RegisterCommand.class);
 
+	private UserDAO userDAO;
+
+	public RegisterCommand(UserDAO userDAO) {
+		this.userDAO = userDAO;
+	}
+
 	@Override
-	public ProcessResult execute() throws IOException, ServletException, AppException {
+	public RequestResult execute(HttpServletRequest request, HttpServletResponse response)
+			throws IOException, ServletException {
 		log.debug("Command starts");
 
 		HttpSession session = request.getSession();
@@ -44,15 +50,13 @@ public class RegisterCommand extends Command {
 			return createForwardResult(forward);
 		}
 
-		if (!new EmailValidator().validate(email)) {
+		if (!email.matches(EmailValidator.EMAIL_PATTERN)) {
 			session.setAttribute("isWrongEmail", true);
 			log.trace("Email invalid");
 			return createForwardResult(forward);
 		}
-		
-		UserDAO manager = UserDAO.getInstance();
 
-		if (manager.findUser(email) != null) {
+		if (userDAO.findUser(email) != null) {
 			session.setAttribute("isUserAlreadyExist", true);
 			log.trace("User " + email + " already exists. Returning to registration");
 			return createForwardResult(forward);
@@ -61,27 +65,27 @@ public class RegisterCommand extends Command {
 		user.setEmail(email);
 		user.setName(name);
 		user.setPassword(password);
-		manager.createUser(user);
+		userDAO.createUser(user);
 		log.info("User " + user.getEmail() + " registered.");
-		
-		user = manager.findUser(user.getEmail());
-		
+
+		user = userDAO.findUser(user.getEmail());
+
 		Role userRole = Role.getRole(user);
 		log.trace("userRole --> " + userRole);
-		if(userRole == Role.CLIENT) {
-			forward = Path.COMMAND__CATALOG;
-		} 
-		
-		if(userRole == Role.ADMIN) {
-			forward = Path.COMMAND__LIST_ORDERS;
+		if (userRole == Role.CLIENT) {
+			forward = Path.COMMAND_CATALOG;
+		}
+
+		if (userRole == Role.ADMIN) {
+			forward = Path.COMMAND_LIST_ORDERS;
 		}
 
 		session.setAttribute("user", user);
 		log.trace("Set the session attribute: user --> " + user);
-		
+
 		session.setAttribute("userRole", userRole);
 		log.trace("Set the session attribute: userRole --> " + userRole);
-		
+
 		log.info("User " + user + " logged as " + userRole.getName());
 		log.debug("Command finished");
 		return createRedirectResult(forward);

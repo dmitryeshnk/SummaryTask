@@ -39,7 +39,7 @@ html, body {
 	align-items: center;
 }
 .cells {
-	max-width: 70%;
+	max-width: 90%;
 	margin: 0 auto;
 }
 .table {
@@ -252,4 +252,10 @@ html, body {
 	width: 50%;
 	padding-top: 50px;
 	margin: 0 auto;
+}
+.table_Name {
+	min-width: 300px;
+}
+.table_Image {
+	width: 300px;
 }

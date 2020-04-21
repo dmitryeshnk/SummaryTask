@@ -18,7 +18,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 
 import ua.nure.yeshenko.SummaryTask.Path;
-import ua.nure.yeshenko.SummaryTask.db.Role;
+import ua.nure.yeshenko.SummaryTask.db.entity.Role;
 
 /**
  * Security filter. Disabled by default. Uncomment Security filter section in
@@ -36,6 +36,26 @@ public class CommandAccessFilter implements Filter {
 	private List<String> commons = new ArrayList<String>();
 	private List<String> outOfControl = new ArrayList<String>();
 
+	public void init(FilterConfig fConfig) throws ServletException {
+		LOG.debug("Filter initialization starts");
+
+		// roles
+		accessMap.put(Role.ADMIN, asList(fConfig.getInitParameter("admin")));
+		accessMap.put(Role.CLIENT, asList(fConfig.getInitParameter("client")));
+		accessMap.put(Role.BLOCKED, asList(fConfig.getInitParameter("blocked")));
+		LOG.trace("Access map --> " + accessMap);
+
+		// commons
+		commons = asList(fConfig.getInitParameter("common"));
+		LOG.trace("Common commands --> " + commons);
+
+		// out of control
+		outOfControl = asList(fConfig.getInitParameter("out-of-control"));
+		LOG.trace("Out of control commands --> " + outOfControl);
+
+		LOG.debug("Filter initialization finished");
+	}
+	
 	public void destroy() {
 		LOG.debug("Filter destruction starts");
 		// do nothing
@@ -82,26 +102,6 @@ public class CommandAccessFilter implements Filter {
 		}
 
 		return accessMap.get(userRole).contains(commandName) || commons.contains(commandName);
-	}
-
-	public void init(FilterConfig fConfig) throws ServletException {
-		LOG.debug("Filter initialization starts");
-
-		// roles
-		accessMap.put(Role.ADMIN, asList(fConfig.getInitParameter("admin")));
-		accessMap.put(Role.CLIENT, asList(fConfig.getInitParameter("client")));
-		accessMap.put(Role.BLOCKED, asList(fConfig.getInitParameter("blocked")));
-		LOG.trace("Access map --> " + accessMap);
-
-		// commons
-		commons = asList(fConfig.getInitParameter("common"));
-		LOG.trace("Common commands --> " + commons);
-
-		// out of control
-		outOfControl = asList(fConfig.getInitParameter("out-of-control"));
-		LOG.trace("Out of control commands --> " + outOfControl);
-
-		LOG.debug("Filter initialization finished");
 	}
 
 	/**

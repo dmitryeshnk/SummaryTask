@@ -1,29 +1,36 @@
 package ua.nure.yeshenko.SummaryTask.web.command;
 
-import static ua.nure.yeshenko.SummaryTask.util.ProccessUtil.createRedirectResult;
-import static ua.nure.yeshenko.SummaryTask.util.ProccessUtil.createForwardResult;
+import static ua.nure.yeshenko.SummaryTask.util.RequestResponceUtil.createForwardResult;
+import static ua.nure.yeshenko.SummaryTask.util.RequestResponceUtil.createRedirectResult;
+
 import java.io.IOException;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
 import ua.nure.yeshenko.SummaryTask.Path;
-import ua.nure.yeshenko.SummaryTask.db.Role;
 import ua.nure.yeshenko.SummaryTask.db.UserDAO;
+import ua.nure.yeshenko.SummaryTask.db.entity.Role;
 import ua.nure.yeshenko.SummaryTask.db.entity.User;
-import ua.nure.yeshenko.SummaryTask.exception.AppException;
-import ua.nure.yeshenko.SummaryTask.model.ProcessResult;
+import ua.nure.yeshenko.SummaryTask.model.RequestResult;
 import ua.nure.yeshenko.SummaryTask.util.EmailValidator;
 
 public class LoginCommand extends Command {
-
-	private static final long serialVersionUID = -3702935524224767740L;
 	private static final Logger log = Logger.getLogger(LoginCommand.class);
+	
+	private UserDAO userDAO;
+
+	public LoginCommand(UserDAO userDAO) {
+		this.userDAO = userDAO;
+	}
 
 	@Override
-	public ProcessResult execute() throws IOException, ServletException, AppException {
+	public RequestResult execute(HttpServletRequest request,
+			HttpServletResponse response) throws IOException, ServletException {
 		log.debug("Command starts");
 		HttpSession session = request.getSession();
 		String email = request.getParameter("email");
@@ -38,13 +45,12 @@ public class LoginCommand extends Command {
 			return createForwardResult(forward);
 		}
 
-		if (!new EmailValidator().validate(email)) {
+		if (!email.matches(EmailValidator.EMAIL_PATTERN)) {
 			session.setAttribute("isInvalidEmail", true);
 			log.trace("Email invalid");
 			return createForwardResult(forward);
-		}
-
-		User user = UserDAO.getInstance().findUser(email);
+		}		
+		User user = userDAO.findUser(email);
 		log.trace("Found in DB: user --> " + user);
 		
 		if (user == null || !password.equals(user.getPassword())) {
@@ -66,6 +72,6 @@ public class LoginCommand extends Command {
 		log.info("User " + user + " logged as " + userRole.getName());
 
 		log.debug("Command finished");
-		return createRedirectResult(Path.COMMAND__CATALOG);
+		return createRedirectResult(Path.COMMAND_CATALOG);
 	}
 }

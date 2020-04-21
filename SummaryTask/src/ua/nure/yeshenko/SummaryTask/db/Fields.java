@@ -28,4 +28,5 @@ public class Fields {
 	public static final String PRODUCT__GENDER = "gender";
 	public static final String PRODUCT__PRICE = "price";
 	public static final String PRODUCT__QUANTITY = "quantity";
+	public static final String PRODUCT__IMAGE = "image";
 }

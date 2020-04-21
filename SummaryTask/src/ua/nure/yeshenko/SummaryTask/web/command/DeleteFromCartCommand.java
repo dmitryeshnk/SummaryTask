@@ -1,40 +1,42 @@
 package ua.nure.yeshenko.SummaryTask.web.command;
 
-import static ua.nure.yeshenko.SummaryTask.util.ProccessUtil.createForwardResult;
+import static ua.nure.yeshenko.SummaryTask.util.RequestResponceUtil.createForwardResult;
 
 import java.io.IOException;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
 import ua.nure.yeshenko.SummaryTask.Path;
+import ua.nure.yeshenko.SummaryTask.bean.CartBean;
 import ua.nure.yeshenko.SummaryTask.db.ProductDAO;
-import ua.nure.yeshenko.SummaryTask.db.bean.CartBean;
 import ua.nure.yeshenko.SummaryTask.db.entity.Product;
 import ua.nure.yeshenko.SummaryTask.exception.AppException;
 import ua.nure.yeshenko.SummaryTask.exception.Messages;
-import ua.nure.yeshenko.SummaryTask.model.ProcessResult;
+import ua.nure.yeshenko.SummaryTask.model.RequestResult;
 
 public class DeleteFromCartCommand extends Command {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -5623201059081669664L;
 	private static final Logger log = Logger.getLogger(DeleteFromCartCommand.class);
+	private ProductDAO productDAO;
+
+	public DeleteFromCartCommand(ProductDAO productDAO) {
+		this.productDAO = productDAO;
+	}
 
 	@Override
-	public ProcessResult execute() throws IOException, ServletException, AppException {
+	public RequestResult execute(HttpServletRequest request, HttpServletResponse response)
+			throws IOException, ServletException {
 		log.debug("Command start");
 		HttpSession session = request.getSession();
 		CartBean cart = CartBean.get(session);
-		if(cart.getCart().isEmpty()) {
+		if (cart.getCart().isEmpty()) {
 			log.error(Messages.ERR_REQUEST_ERROR);
 			throw new AppException(Messages.ERR_REQUEST_ERROR);
 		}
-		ProductDAO manager = ProductDAO.getInstance();
 		int productId;
 		try {
 			productId = Integer.valueOf((request.getParameter("id")));
@@ -44,14 +46,10 @@ public class DeleteFromCartCommand extends Command {
 		}
 		log.trace("Request parameter: id --> " + productId);
 
-		Product product = manager.findProduct(productId);
+		Product product = productDAO.findProduct(productId);
 		log.trace("Find product in DB -->" + product);
-		if (!cart.deleteItem(product)) {
-			log.error(Messages.ERR_DELETING_FROM_CART);
-			throw new AppException(Messages.ERR_DELETING_FROM_CART);
-		}
-
-		manager.updateProduct(product, false);
+		productDAO.updateProduct(product, cart.getCart().get(product));
+		cart.deleteItem(product, true);
 		log.trace("Update product in DB (change quantity)");
 
 		session.setAttribute("cart", cart);

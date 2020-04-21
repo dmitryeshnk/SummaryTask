@@ -21,21 +21,21 @@
 			<select class="custom-select" name="select">
 				<option value="" selected disabled hidden=""><fmt:message
 						key="catalog_jsp.select.sortby" bundle="${bundle}" /></option>
-				<option value="0"><fmt:message
+				<option value="CompareByName"><fmt:message
 						key="catalog_jsp.select.byNameAZ" bundle="${bundle}" /></option>
-				<option value="1"><fmt:message
+				<option value="CompareByNameReverse"><fmt:message
 						key="catalog_jsp.select.byNameZA" bundle="${bundle}" /></option>
-				<option value="2"><fmt:message
+				<option value="CompareByPrice"><fmt:message
 						key="catalog_jsp.select.priceLowHign" bundle="${bundle}" /></option>
-				<option value="3"><fmt:message
+				<option value="CompareByPriceReverse"><fmt:message
 						key="catalog_jsp.select.priceHignLow" bundle="${bundle}" /></option>
-				<option value="4"><fmt:message
+				<option value="CompareByIdReverse"><fmt:message
 						key="catalog_jsp.select.byNovelty" bundle="${bundle}" /></option>
-				<option value="5"><fmt:message
+				<option value="CompareBySizeReverse"><fmt:message
 						key="catalog_jsp.select.largerSmaller" bundle="${bundle}" /></option>
-				<option value="6"><fmt:message
+				<option value="CompareBySize"><fmt:message
 						key="catalog_jsp.select.smallerLarger" bundle="${bundle}" /></option>
-			</select> <input type="hidden" name="command" value="catalog">
+			</select> <input type="hidden" name="command" value="sorter">
 			<div class="interval">
 				<p>
 					<fmt:message key="catalog_jsp.price.price" bundle="${bundle}" />
@@ -77,10 +77,18 @@
 							required>
 					</div>
 					<div class="form-group">
-						<label for="qt"><fmt:message
+						<label for="quantity"><fmt:message
 								key="catalog_jsp.insert.quantity" bundle="${bundle}" /></label> <input
-							class="form-control" id="qt" type="number" min="1" name="qt"
+							class="form-control" id="quantity" type="number" min="1"
+							name="quantity"
 							placeholder="<fmt:message key="catalog_jsp.insert.quantity" bundle="${bundle}"/>"
+							required>
+					</div>
+					<div class="form-group">
+						<label for="image"><fmt:message
+								key="catalog_jsp.insert.image" bundle="${bundle}" /></label> <input
+							class="form-control" id="image" type="file" name="image"
+							placeholder="<fmt:message key="catalog_jsp.insert.image" bundle="${bundle}"/>"
 							required>
 					</div>
 					<input type="hidden" name="command" value="insertProduct">
@@ -119,7 +127,9 @@
 							<th scope="col"><fmt:message key="catalog_jsp.table.id"
 									bundle="${bundle}" /></th>
 						</c:if>
-						<th scope="col"><fmt:message key="catalog_jsp.table.name"
+						<th scope="col" class="table_Image" ><fmt:message key="catalog_jsp.table.image"
+								bundle="${bundle}" /></th>
+						<th scope="col" class="table_Name"><fmt:message key="catalog_jsp.table.name"
 								bundle="${bundle}" /></th>
 						<th scope="col"><fmt:message key="catalog_jsp.table.size"
 								bundle="${bundle}" /></th>
@@ -147,6 +157,8 @@
 							<c:if test="${userRole.name == 'admin' }">
 								<td><fmt:formatNumber pattern="000" value="${product.id }" /></td>
 							</c:if>
+							<td><img src="data:image/jpg;base64,${product.image}"
+								width="300" height="300"></td>
 							<td class="nameProduct"><c:out value="${product.name}" /></td>
 							<td><c:out value="${product.size}" /></td>
 							<td><c:out value="${product.price}" /></td>
@@ -167,7 +179,7 @@
 								</c:if></td>
 							<td width=50px><c:set var="check" value="${true }" /> <c:forEach
 									items="${cart.cart }" var="inCart">
-									<c:if test="${inCart.id == product.id && check}">
+									<c:if test="${inCart.key.id == product.id && check}">
 										<p class="text-success" id="inCart">
 											<fmt:message key="catalog_jsp.table.added" bundle="${bundle}" />
 										</p>

@@ -1,39 +1,46 @@
 package ua.nure.yeshenko.SummaryTask.web.command;
 
-import static ua.nure.yeshenko.SummaryTask.util.ProccessUtil.createRedirectResult;
-import static ua.nure.yeshenko.SummaryTask.util.ProccessUtil.createForwardResult;
+import static ua.nure.yeshenko.SummaryTask.util.RequestResponceUtil.createForwardResult;
+import static ua.nure.yeshenko.SummaryTask.util.RequestResponceUtil.createRedirectResult;
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Savepoint;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
 import ua.nure.yeshenko.SummaryTask.Path;
+import ua.nure.yeshenko.SummaryTask.bean.CartBean;
+import ua.nure.yeshenko.SummaryTask.db.DBManager;
 import ua.nure.yeshenko.SummaryTask.db.OrderDAO;
-import ua.nure.yeshenko.SummaryTask.db.Status;
 import ua.nure.yeshenko.SummaryTask.db.UserDAO;
-import ua.nure.yeshenko.SummaryTask.db.bean.CartBean;
 import ua.nure.yeshenko.SummaryTask.db.entity.Order;
+import ua.nure.yeshenko.SummaryTask.db.entity.Status;
 import ua.nure.yeshenko.SummaryTask.db.entity.User;
 import ua.nure.yeshenko.SummaryTask.exception.AppException;
 import ua.nure.yeshenko.SummaryTask.exception.DBException;
 import ua.nure.yeshenko.SummaryTask.exception.Messages;
-import ua.nure.yeshenko.SummaryTask.model.ProcessResult;
+import ua.nure.yeshenko.SummaryTask.model.RequestResult;
 
 public class ConfirmCommand extends Command {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -8487572403279882282L;
 	private static final Logger log = Logger.getLogger(ConfirmCommand.class);
+	private OrderDAO orderDAO;
+	private UserDAO userDAO;
+	
+	public ConfirmCommand(OrderDAO orderDAO, UserDAO userDAO) {
+		this.orderDAO = orderDAO;
+		this.userDAO = userDAO;
+	}
 
 	@Override
-	public ProcessResult execute() throws IOException, ServletException, AppException {
+	public RequestResult execute(HttpServletRequest request,
+			HttpServletResponse response) throws IOException, ServletException {
 		log.debug("Command start");
 		HttpSession session = request.getSession();
 
@@ -57,21 +64,22 @@ public class ConfirmCommand extends Command {
 		if (city == null || city.isEmpty()) {
 			session.setAttribute("isEmptyCity", true);
 			log.trace("Set the session attribute: isEmptyCity --> " + true);
-			return createForwardResult(Path.PAGE__CHECKOUT);
+			return createForwardResult(Path.PAGE_CHECKOUT);
 		}
 		user.setCity(city);
 		order.setUser_id(user.getId());
 		order.setStatus(Status.REGISTERED);
 		order.setProductsId(cart.toString());
 
-		Connection con = null;
 		Savepoint save = null;
+		Connection con = null;
 		try {
-			con = OrderDAO.getInstance().getConnection();
+			con = DBManager.getConnection();
 			save = con.setSavepoint();
-			OrderDAO.getInstance().insertOrder(order, con);
-			UserDAO.getInstance().updateUser(user, con);
+			orderDAO.insertOrder(order, con);
+			userDAO.updateUser(user, con);
 			con.commit();
+			con.close();
 		} catch (SQLException ex) {
 			try {
 				con.rollback(save);
@@ -95,7 +103,7 @@ public class ConfirmCommand extends Command {
 		log.trace("Set the session attribute: cart --> " + cart.getCart());
 		session.setAttribute("inside", cart.getCart().size());
 		log.debug("Command finish");
-		return createRedirectResult(Path.COMMAND__LIST_ORDERS);
+		return createRedirectResult(Path.COMMAND_LIST_ORDERS);
 	}
 
 }

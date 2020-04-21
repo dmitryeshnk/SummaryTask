@@ -1,28 +1,24 @@
 package ua.nure.yeshenko.SummaryTask.web.command;
 
-import static ua.nure.yeshenko.SummaryTask.util.ProccessUtil.createRedirectResult;
+import static ua.nure.yeshenko.SummaryTask.util.RequestResponceUtil.createRedirectResult;
 
 import java.io.IOException;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
-import ua.nure.yeshenko.SummaryTask.exception.AppException;
-import ua.nure.yeshenko.SummaryTask.model.ProcessResult;
+import ua.nure.yeshenko.SummaryTask.model.RequestResult;
 
 public class ChangeLocaleCommand extends Command{
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 8891310583007745194L;
-	
 	private static final Logger log = Logger.getLogger(ChangeLocaleCommand.class);
 
 	@Override
-	public ProcessResult execute() throws IOException, ServletException, AppException {
+	public RequestResult execute(HttpServletRequest request,
+			HttpServletResponse response) throws IOException, ServletException {
 		log.debug("Command start");
 		HttpSession session = request.getSession();
 		String newLocale = request.getParameter("newLocale");

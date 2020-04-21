@@ -1,6 +1,4 @@
-package ua.nure.yeshenko.SummaryTask.db;
-
-import ua.nure.yeshenko.SummaryTask.db.entity.User;
+package ua.nure.yeshenko.SummaryTask.db.entity;
 
 public enum Role {
 	ADMIN, CLIENT, BLOCKED;

@@ -1,12 +1,12 @@
 package ua.nure.yeshenko.SummaryTask.web.command;
 
+import static ua.nure.yeshenko.SummaryTask.util.RequestResponceUtil.createRedirectResult;
+
 import java.io.IOException;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
@@ -16,14 +16,12 @@ import ua.nure.yeshenko.SummaryTask.db.entity.Product;
 import ua.nure.yeshenko.SummaryTask.exception.AppException;
 import ua.nure.yeshenko.SummaryTask.exception.Messages;
 import ua.nure.yeshenko.SummaryTask.model.RequestResult;
-import static ua.nure.yeshenko.SummaryTask.util.RequestResponceUtil.createForwardResult;
 
-public class SearchCommand extends Command {
-	private static final Logger log = Logger.getLogger(SearchCommand.class);
+public class DeleteProductCommand extends Command {
 	private ProductDAO productDAO;
-
-	public SearchCommand(ProductDAO productDAO) {
-		super();
+	private static final Logger log = Logger.getLogger(DeleteProductCommand.class);
+	
+	public DeleteProductCommand(ProductDAO productDAO) {
 		this.productDAO = productDAO;
 	}
 
@@ -31,21 +29,22 @@ public class SearchCommand extends Command {
 	public RequestResult execute(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		log.debug("Command start");
-
-		String name = request.getParameter("name");
-		if (name == null || name.isEmpty()) {
+		long id;
+		try {
+			id = Long.valueOf(request.getParameter("id"));
+		} catch (NumberFormatException e) {
 			log.error(Messages.ERR_REQUEST_ERROR);
-			throw new AppException(Messages.ERR_REQUEST_ERROR);
+			throw new AppException(Messages.ERR_REQUEST_ERROR, e);
 		}
-
-		List<Product> products = productDAO.findProduct(name);
-		HttpSession session = request.getSession();
-		session.setAttribute("products", products);
-		log.trace("Set the session attribute: products" + products);
-		session.setAttribute("searchResult", true);
-
+		
+		Product product = productDAO.findProduct(id);
+		log.debug("Get product from db with id --> "+product.getId());
+		productDAO.deleteProduct(product);
+		log.debug("Product deleted");
+		
+		
 		log.debug("Command finish");
-		return createForwardResult(Path.PAGE_CATALOG);
+		return createRedirectResult(Path.COMMAND_CATALOG);
 	}
 
 }

@@ -7,10 +7,6 @@ package ua.nure.yeshenko.SummaryTask.exception;
  * 
  */
 public class DBException extends AppException {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -5041580558559762313L;
 
 	public DBException() {

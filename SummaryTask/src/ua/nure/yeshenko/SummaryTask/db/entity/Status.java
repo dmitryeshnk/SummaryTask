@@ -1,4 +1,4 @@
-package ua.nure.yeshenko.SummaryTask.db;
+package ua.nure.yeshenko.SummaryTask.db.entity;
 
 public enum Status {
 	REGISTERED, PAID, CANCELED;

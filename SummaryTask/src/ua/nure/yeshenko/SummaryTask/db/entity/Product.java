@@ -1,8 +1,5 @@
 package ua.nure.yeshenko.SummaryTask.db.entity;
 
-import ua.nure.yeshenko.SummaryTask.db.Gender;
-import ua.nure.yeshenko.SummaryTask.db.Type;
-
 public class Product extends Entity {
 	/**
 	 * 
@@ -14,6 +11,7 @@ public class Product extends Entity {
 	private Gender gender;
 	private int price;
 	private int quantity;
+	private String base64Image;
 	
 	public String getName() {
 		return name;
@@ -82,6 +80,12 @@ public class Product extends Entity {
 		if (type != other.type)
 			return false;
 		return true;
+	}
+	public String getImage() {
+		return base64Image;
+	}
+	public void setImage(String base64Image) {
+		this.base64Image = base64Image;
 	}
 	
 	

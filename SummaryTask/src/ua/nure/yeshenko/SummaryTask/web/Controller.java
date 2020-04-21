@@ -1,10 +1,11 @@
 package ua.nure.yeshenko.SummaryTask.web;
 
-import static ua.nure.yeshenko.SummaryTask.util.ProccessUtil.createForwardResult;
+import static ua.nure.yeshenko.SummaryTask.util.RequestResponceUtil.createForwardResult;
 
 import java.io.IOException;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,7 +15,7 @@ import org.apache.log4j.Logger;
 import ua.nure.yeshenko.SummaryTask.Path;
 import ua.nure.yeshenko.SummaryTask.exception.AppException;
 import ua.nure.yeshenko.SummaryTask.model.Operation;
-import ua.nure.yeshenko.SummaryTask.model.ProcessResult;
+import ua.nure.yeshenko.SummaryTask.model.RequestResult;
 import ua.nure.yeshenko.SummaryTask.web.command.Command;
 import ua.nure.yeshenko.SummaryTask.web.command.CommandContainer;
 
@@ -24,7 +25,7 @@ import ua.nure.yeshenko.SummaryTask.web.command.CommandContainer;
  * @author D.Yeshenko
  *
  */
-
+@MultipartConfig
 public class Controller extends HttpServlet {
 
 	/**
@@ -57,14 +58,14 @@ public class Controller extends HttpServlet {
 		LOG.trace("Request parameter: command --> " + commandName);
 
 		// obtain command object by its name
-		Command command = CommandContainer.get(commandName);
+		CommandContainer commandContainer = (CommandContainer) getServletContext().getAttribute("CommandContainer");
+		Command command = commandContainer.get(commandName);
 		LOG.trace("Obtained command --> " + command);
 
 		// execute command and get forward address
-		ProcessResult result = createForwardResult(Path.PAGE_ERROR);
+		RequestResult result = createForwardResult(Path.PAGE_ERROR);
 		try {
-			command.init(getServletContext(), request, response);
-			result = command.execute();
+			result = command.execute(request, response);
 		} catch (AppException ex) {
 			request.setAttribute("errorMessage", ex.getMessage());
 		}
@@ -74,7 +75,7 @@ public class Controller extends HttpServlet {
 		
 		if (Operation.FORWARD.equals(result.getOperation())) {
 			request.getRequestDispatcher(result.getPath()).forward(request, response);
-		} else {
+		} else if(Operation.REDIRECT.equals(result.getOperation())){
 			response.sendRedirect(result.getPath());
 		}
 		

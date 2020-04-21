@@ -1,7 +1,5 @@
 package ua.nure.yeshenko.SummaryTask.db.entity;
 
-import ua.nure.yeshenko.SummaryTask.db.Status;
-
 public class Order extends Entity{
 
 	/**

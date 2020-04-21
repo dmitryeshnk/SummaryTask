@@ -1,22 +1,26 @@
 package ua.nure.yeshenko.SummaryTask.web.listener;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
-
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
+import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
+import ua.nure.yeshenko.SummaryTask.bean.CartBean;
+import ua.nure.yeshenko.SummaryTask.db.DBManager;
+import ua.nure.yeshenko.SummaryTask.db.OrderDAO;
 import ua.nure.yeshenko.SummaryTask.db.ProductDAO;
-import ua.nure.yeshenko.SummaryTask.db.bean.CartBean;
-import ua.nure.yeshenko.SummaryTask.db.entity.Product;
+import ua.nure.yeshenko.SummaryTask.db.UserDAO;
 import ua.nure.yeshenko.SummaryTask.exception.DBException;
+import ua.nure.yeshenko.SummaryTask.exception.Messages;
+import ua.nure.yeshenko.SummaryTask.web.command.CommandContainer;
 
 /**
  * 
@@ -38,7 +42,17 @@ public class ContextListener implements ServletContextListener, HttpSessionListe
 		ServletContext servletContext = sce.getServletContext();
 		initLog4J(servletContext);
 		initCommandContainer();
-		initI18N(servletContext);
+		try {
+			Context initContext = new InitialContext();
+			Context envContext = (Context) initContext.lookup("java:/comp/env");
+			DBManager.setDataSource((DataSource) envContext.lookup("jdbc/root"));
+		} catch (NamingException e) {
+			log.error(Messages.ERR_CANNOT_OBTAIN_DATA_SOURCE);
+		}
+		servletContext.setAttribute("UserDAO", new UserDAO());
+		servletContext.setAttribute("ProductDAO", new ProductDAO());
+		servletContext.setAttribute("OrderDAO", new OrderDAO());
+		servletContext.setAttribute("CommandContainer", new CommandContainer(servletContext));
 		log.debug("Servlet context initialization finished");
 	}
 
@@ -46,10 +60,8 @@ public class ContextListener implements ServletContextListener, HttpSessionListe
 	public void sessionDestroyed(HttpSessionEvent se) {
 		ProductDAO manager;
 		try {
-			manager = ProductDAO.getInstance();
-			for (Product pr : CartBean.get(se.getSession()).getCart()) {
-				manager.updateProduct(pr, false);
-			}
+			manager = (ProductDAO) se.getSession().getServletContext().getAttribute("ProductDAO");
+			CartBean.get(se.getSession()).getCart().forEach((k, v) -> manager.updateProduct(k, v));
 		} catch (DBException e1) {
 			e1.printStackTrace();
 		}
@@ -65,30 +77,6 @@ public class ContextListener implements ServletContextListener, HttpSessionListe
 		}
 	}
 
-	/**
-	 * Initializes i18n subsystem.
-	 */
-	private void initI18N(ServletContext servletContext) {
-		log.debug("I18N subsystem initialization started");
-		
-		String localesValue = servletContext.getInitParameter("locales");
-		if (localesValue == null || localesValue.isEmpty()) {
-			log.warn("'locales' init parameter is empty, the default encoding will be used");
-		} else {
-			List<String> locales = new ArrayList<String>();
-			StringTokenizer st = new StringTokenizer(localesValue);
-			while (st.hasMoreTokens()) {
-				String localeName = st.nextToken();
-				locales.add(localeName);
-			}							
-			
-			log.debug("Application attribute set: locales --> " + locales);
-			servletContext.setAttribute("locales", locales);
-		}		
-		
-		log.debug("I18N subsystem initialization finished");
-	}
-	
 	private void initLog4J(ServletContext servletContext) {
 		try {
 			PropertyConfigurator.configure(servletContext.getRealPath("WEB-INF/log4j.properties"));
