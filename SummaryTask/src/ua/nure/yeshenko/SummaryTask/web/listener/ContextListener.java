@@ -41,7 +41,6 @@ public class ContextListener implements ServletContextListener, HttpSessionListe
 		log.debug("Servlet context initialization starts");
 		ServletContext servletContext = sce.getServletContext();
 		initLog4J(servletContext);
-		initCommandContainer();
 		try {
 			Context initContext = new InitialContext();
 			Context envContext = (Context) initContext.lookup("java:/comp/env");
@@ -68,14 +67,7 @@ public class ContextListener implements ServletContextListener, HttpSessionListe
 		se.getSession().setAttribute("inside", 0);
 		System.out.println("Destroy session");
 	}
-
-	private void initCommandContainer() {
-		try {
-			Class.forName("ua.nure.yeshenko.SummaryTask.web.command.CommandContainer");
-		} catch (ClassNotFoundException e) {
-			throw new IllegalStateException("Cannot init command container");
-		}
-	}
+	
 
 	private void initLog4J(ServletContext servletContext) {
 		try {

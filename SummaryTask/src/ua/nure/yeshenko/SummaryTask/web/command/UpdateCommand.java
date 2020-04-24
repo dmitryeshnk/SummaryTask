@@ -4,12 +4,14 @@ import static ua.nure.yeshenko.SummaryTask.util.RequestResponceUtil.createForwar
 import static ua.nure.yeshenko.SummaryTask.util.RequestResponceUtil.createRedirectResult;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
+import javax.sql.rowset.serial.SerialBlob;
 
 import org.apache.log4j.Logger;
 
@@ -21,7 +23,6 @@ import ua.nure.yeshenko.SummaryTask.db.entity.Type;
 import ua.nure.yeshenko.SummaryTask.exception.AppException;
 import ua.nure.yeshenko.SummaryTask.exception.Messages;
 import ua.nure.yeshenko.SummaryTask.model.RequestResult;
-import ua.nure.yeshenko.SummaryTask.util.FileConverter;
 
 public class UpdateCommand extends Command {
 	private static final Logger log = Logger.getLogger(UpdateCommand.class);
@@ -60,7 +61,11 @@ public class UpdateCommand extends Command {
 			product.setGender(Gender.values()[Integer.valueOf(request.getParameter("gender"))]);
 			product.setType(Type.values()[Integer.valueOf(request.getParameter("type"))]);
 			Part file = request.getPart("image");
-			product.setImage(FileConverter.convert(file.getInputStream()));
+			byte[] bytesArray = new byte[(int)file.getSize()];
+			InputStream fis = file.getInputStream();
+			fis.read(bytesArray); 
+			fis.close();
+			product.setImage(new SerialBlob(bytesArray));
 		} catch (Exception e) {
 			log.error(Messages.ERR_CANNOT_UPDATE_PRODUCT);
 			e.printStackTrace();

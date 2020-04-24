@@ -12,7 +12,7 @@ import ua.nure.yeshenko.SummaryTask.db.entity.User;
 import ua.nure.yeshenko.SummaryTask.exception.DBException;
 import ua.nure.yeshenko.SummaryTask.exception.Messages;
 
-public final class UserDAO {
+public class UserDAO {
 	private static final String SQL_CREATE_USER = "INSERT INTO users VALUES (DEFAULT, ?, ?, ?, 1, NULL)";
 
 	private static final String SQL_FIND_USER_BY_EMAIL = "SELECT * FROM users WHERE email=?";
@@ -22,6 +22,8 @@ public final class UserDAO {
 	private static final String SQL_UPDATE_USER = "UPDATE users SET role=?, city=? WHERE id=?";
 
 	private static final String SQL_FIND_ALL_USERS = "SELECT * FROM users";
+
+	private static final String SQL_DELETE_USER_BY_EMAIL = "DELETE FROM users WHERE email = ?";
 
 	/**
 	 * Create user.
@@ -136,10 +138,20 @@ public final class UserDAO {
 			pstmt.setInt(k++, user.getRoleId());
 			pstmt.setString(k++, user.getCity());
 			pstmt.setLong(k, user.getId());
-			pstmt.executeUpdate();
+			pstmt.execute();
 		} catch (SQLException e) {
 			DBManager.rollback(con);
 			throw new DBException(Messages.ERR_CANNOT_COMPLETE_TRANSACTION, e);
+		}
+	}
+
+	public void deleteUser(String email) throws DBException {
+		try (Connection con = DBManager.getConnection();
+				PreparedStatement pstmt = con.prepareStatement(SQL_DELETE_USER_BY_EMAIL)) {
+			pstmt.setString(1, email);
+			pstmt.execute();
+		} catch (SQLException e) {
+			throw new DBException(Messages.ERR_CANNOT_DELETE_USER, e);
 		}
 	}
 

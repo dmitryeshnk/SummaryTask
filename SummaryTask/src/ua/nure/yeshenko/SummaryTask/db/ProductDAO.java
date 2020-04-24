@@ -1,6 +1,5 @@
 package ua.nure.yeshenko.SummaryTask.db;
 
-import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,7 +12,6 @@ import ua.nure.yeshenko.SummaryTask.db.entity.Product;
 import ua.nure.yeshenko.SummaryTask.db.entity.Type;
 import ua.nure.yeshenko.SummaryTask.exception.DBException;
 import ua.nure.yeshenko.SummaryTask.exception.Messages;
-import ua.nure.yeshenko.SummaryTask.util.FileConverter;
 
 public class ProductDAO {
 	private static final String SQL_FIND_PRODUCT_BY_ID = "SELECT * FROM products WHERE id=?";
@@ -150,7 +148,7 @@ public class ProductDAO {
 			pstmt.setInt(k++, product.getGender().ordinal());
 			pstmt.setInt(k++, product.getPrice());
 			pstmt.setInt(k++, product.getQuantity());
-			pstmt.setBinaryStream(k++, FileConverter.convert(product.getImage()));
+			pstmt.setBlob(k++, product.getImage());
 			pstmt.setLong(k++, product.getId());
 			pstmt.executeUpdate();
 			con.commit();
@@ -179,7 +177,7 @@ public class ProductDAO {
 			pstmt.setInt(k++, product.getGender().ordinal());
 			pstmt.setInt(k++, product.getPrice());
 			pstmt.setInt(k++, product.getQuantity());
-			pstmt.setBinaryStream(k++, FileConverter.convert(product.getImage()));
+			pstmt.setBlob(k++, product.getImage());
 			pstmt.execute();
 			con.commit();
 		} catch (SQLException ex) {
@@ -223,8 +221,7 @@ public class ProductDAO {
 				product.setPrice(rs.getInt(Fields.PRODUCT__PRICE));
 				product.setGender(Gender.values()[rs.getInt(Fields.PRODUCT__GENDER)]);
 				product.setQuantity(rs.getInt(Fields.PRODUCT__QUANTITY));
-				Blob blob = rs.getBlob(Fields.PRODUCT__IMAGE);
-				product.setImage(FileConverter.convert(blob));
+				product.setImage(rs.getBlob(Fields.PRODUCT__IMAGE));
 				return product;
 			} catch (SQLException e) {
 				throw new IllegalStateException(e);

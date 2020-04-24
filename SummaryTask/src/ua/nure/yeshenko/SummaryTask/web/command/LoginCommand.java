@@ -38,17 +38,16 @@ public class LoginCommand extends Command {
 
 		String password = request.getParameter("password");
 
-		String forward = Path.PAGE_LOGIN;
 		if (email == null || password == null || email.isEmpty() || password.isEmpty()) {
 			session.setAttribute("isEmptyLogin", true);
 			log.trace("Empty fields in users request");
-			return createForwardResult(forward);
+			return createForwardResult(Path.PAGE_LOGIN);
 		}
 
 		if (!email.matches(EmailValidator.EMAIL_PATTERN)) {
 			session.setAttribute("isInvalidEmail", true);
 			log.trace("Email invalid");
-			return createForwardResult(forward);
+			return createForwardResult(Path.PAGE_LOGIN);
 		}		
 		User user = userDAO.findUser(email);
 		log.trace("Found in DB: user --> " + user);
@@ -56,7 +55,7 @@ public class LoginCommand extends Command {
 		if (user == null || !password.equals(user.getPassword())) {
 			session.setAttribute("isIncorrectUser", true);
 			log.trace("Cannot find user with such email/password");
-			return createForwardResult(forward);
+			return createForwardResult(Path.PAGE_LOGIN);
 		}
 		
 		Role userRole = Role.getRole(user);

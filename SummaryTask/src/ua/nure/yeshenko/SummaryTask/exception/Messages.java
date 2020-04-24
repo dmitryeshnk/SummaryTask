@@ -54,5 +54,7 @@ public class Messages {
 	public static final String ERR_CANNOT_FIND_SORTER = "Cannot find sorter value";
 
 	public static final String ERR_CANNOT_INSERT_PRODUCT = "Cannot insert the product";
+
+	public static final String ERR_CANNOT_DELETE_USER = "Cannot delete user";
 	
 }

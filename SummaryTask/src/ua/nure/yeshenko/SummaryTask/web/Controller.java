@@ -69,15 +69,16 @@ public class Controller extends HttpServlet {
 		} catch (AppException ex) {
 			request.setAttribute("errorMessage", ex.getMessage());
 		}
-		LOG.trace("Forward address --> " + result.getPath());
+		if(result != null) {
+			LOG.trace("Forward address --> " + result.getPath());
 
-		LOG.debug("Controller finished, now go to forward address --> " + result.getPath());
-		
-		if (Operation.FORWARD.equals(result.getOperation())) {
-			request.getRequestDispatcher(result.getPath()).forward(request, response);
-		} else if(Operation.REDIRECT.equals(result.getOperation())){
-			response.sendRedirect(result.getPath());
+			LOG.debug("Controller finished, now go to forward address --> " + result.getPath());
+			
+			if (Operation.FORWARD.equals(result.getOperation())) {
+				request.getRequestDispatcher(result.getPath()).forward(request, response);
+			} else if(Operation.REDIRECT.equals(result.getOperation())){
+				response.sendRedirect(result.getPath());
+			}
 		}
-		
 	}
 }

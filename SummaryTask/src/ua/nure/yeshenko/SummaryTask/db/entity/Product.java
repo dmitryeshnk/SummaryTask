@@ -1,5 +1,7 @@
 package ua.nure.yeshenko.SummaryTask.db.entity;
 
+import java.sql.Blob;
+
 public class Product extends Entity {
 	/**
 	 * 
@@ -11,7 +13,7 @@ public class Product extends Entity {
 	private Gender gender;
 	private int price;
 	private int quantity;
-	private String base64Image;
+	private Blob image;
 	
 	public String getName() {
 		return name;
@@ -49,44 +51,10 @@ public class Product extends Entity {
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + ((gender == null) ? 0 : gender.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + price;
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
-		return result;
+	public Blob getImage() {
+		return image;
 	}
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!super.equals(obj))
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Product other = (Product) obj;
-		if (gender != other.gender)
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		if (price != other.price)
-			return false;
-		if (type != other.type)
-			return false;
-		return true;
+	public void setImage(Blob image) {
+		this.image = image;
 	}
-	public String getImage() {
-		return base64Image;
-	}
-	public void setImage(String base64Image) {
-		this.base64Image = base64Image;
-	}
-	
-	
 }

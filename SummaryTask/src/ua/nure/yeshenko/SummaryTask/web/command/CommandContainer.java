@@ -41,8 +41,8 @@ public class CommandContainer {
 		commands.put("search", new SearchCommand(productDAO));
 		commands.put("changeQuantity", new ChangeQuantityCommand(productDAO));
 		commands.put("sorter", new SortCommand(productDAO));
-		commands.put("getImage", new GetProductImage(productDAO));
 		commands.put("deleteProduct", new DeleteProductCommand(productDAO));
+		commands.put("getImage", new GetImageCommand(productDAO));
 	}
 
 	/**

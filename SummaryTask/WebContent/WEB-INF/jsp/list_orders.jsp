@@ -42,8 +42,8 @@
 							</c:if>
 							<td>${order.status.name }</td>
 							<td><c:forEach items="${productsId[order.id]}" var="product">
-									<img src="data:image/jpg;base64,${product.image}" width="100"
-										height="100"> ${product.name }<br>
+									<img alt="" src="controller?command=getImage&id=${product.id }"
+										width="100" height="100"> ${product.name }<br>
 								</c:forEach></td>
 							<c:if test="${userRole.name == 'admin' }">
 								<c:if test="${order.status.name == 'registered'}">

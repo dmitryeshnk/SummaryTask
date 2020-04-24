@@ -52,7 +52,7 @@
 		<c:if test="${userRole.name == 'admin' }">
 			<div id="Insert"
 				title="<fmt:message key="catalog_jsp.insert.title" bundle="${bundle}"/>">
-				<form class="form-insert" method="post" action="controller">
+				<form class="form-insert" method="post" action="controller" enctype="multipart/form-data">
 					<div class="form-group">
 						<label for="name"><fmt:message
 								key="catalog_jsp.insert.nameOfProduct" bundle="${bundle}" /></label> <input
@@ -127,10 +127,10 @@
 							<th scope="col"><fmt:message key="catalog_jsp.table.id"
 									bundle="${bundle}" /></th>
 						</c:if>
-						<th scope="col" class="table_Image" ><fmt:message key="catalog_jsp.table.image"
-								bundle="${bundle}" /></th>
-						<th scope="col" class="table_Name"><fmt:message key="catalog_jsp.table.name"
-								bundle="${bundle}" /></th>
+						<th scope="col" class="table_Image"><fmt:message
+								key="catalog_jsp.table.image" bundle="${bundle}" /></th>
+						<th scope="col" class="table_Name"><fmt:message
+								key="catalog_jsp.table.name" bundle="${bundle}" /></th>
 						<th scope="col"><fmt:message key="catalog_jsp.table.size"
 								bundle="${bundle}" /></th>
 						<th scope="col"><fmt:message key="catalog_jsp.table.price"
@@ -157,8 +157,9 @@
 							<c:if test="${userRole.name == 'admin' }">
 								<td><fmt:formatNumber pattern="000" value="${product.id }" /></td>
 							</c:if>
-							<td><img src="data:image/jpg;base64,${product.image}"
-								width="300" height="300"></td>
+							<td><img alt=""
+								src="controller?command=getImage&id=${product.id }" width="300"
+								height="300"></td>
 							<td class="nameProduct"><c:out value="${product.name}" /></td>
 							<td><c:out value="${product.size}" /></td>
 							<td><c:out value="${product.price}" /></td>

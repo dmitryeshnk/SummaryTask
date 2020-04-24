@@ -26,8 +26,8 @@
 										bundle="${bundle}" /></th>
 								<th scope="col"><fmt:message key="cart_jsp.table.price"
 										bundle="${bundle}" /></th>
-								<th scope="col"><fmt:message key="catalog_jsp.insert.quantity"
-										bundle="${bundle}" /></th>
+								<th scope="col"><fmt:message
+										key="catalog_jsp.insert.quantity" bundle="${bundle}" /></th>
 								<th scope="col"><fmt:message key="cart_jsp.table.delete"
 										bundle="${bundle}" /></th>
 							</tr>
@@ -36,7 +36,8 @@
 							<c:set var="total" value="0" />
 							<c:forEach items="${cart.cart}" var="inCart">
 								<tr>
-									<td class="table_Image"><img src="data:image/jpg;base64,${inCart.key.image}"
+									<td class="table_Image"><img alt=""
+										src="controller?command=getImage&id=${product.id }"
 										width="300" height="300"></td>
 									<td class="table_Image"><c:out value="${inCart.key.name}" /></td>
 									<td><c:out value="${inCart.key.size}" /></td>
