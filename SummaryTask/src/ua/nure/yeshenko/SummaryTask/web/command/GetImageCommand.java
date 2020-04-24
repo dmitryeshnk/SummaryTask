@@ -14,32 +14,29 @@ import ua.nure.yeshenko.SummaryTask.exception.AppException;
 import ua.nure.yeshenko.SummaryTask.exception.Messages;
 import ua.nure.yeshenko.SummaryTask.model.RequestResult;
 
-public class GetProductImage extends Command {
+public class GetImageCommand extends Command{
+	
 	private ProductDAO productDAO;
 	
-	public GetProductImage(ProductDAO productDAO) {
+	
+	public GetImageCommand(ProductDAO productDAO) {
 		this.productDAO = productDAO;
 	}
 
 	@Override
 	public RequestResult execute(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
-		int id;
 		try {
-			id = Integer.valueOf(request.getParameter("id"));
-		}catch (Exception e) {
+			int id = Integer.valueOf(request.getParameter("id"));
+			Product product = productDAO.findProduct(id);
+			Blob blob = product.getImage();
+			response.setContentType("image/jpg");
+			response.getOutputStream().write(blob.getBytes(1, (int)blob.length()));
+		} catch(NumberFormatException e) {
 			throw new AppException(Messages.ERR_REQUEST_ERROR, e);
+		} catch (SQLException e) {
+			throw new AppException(Messages.ERR_CANNOT_OBTAIN_PRODUCT, e);
 		}
-		Product product = productDAO.findProduct(id);
-		response.setContentType("image/jpg");
-//		try {
-//			Blob image = product.getImage();
-//			response.getOutputStream().write(image.getBytes(0,(int) image.length()));
-//		} catch (SQLException e) {
-//			throw new AppException(Messages.ERR_CANNOT_OBTAIN_PRODUCT_BY_ID, e);
-//		} catch (IOException e) {
-//			throw new AppException(Messages.ERR_REQUEST_ERROR, e);
-//		}
 		return null;
 	}
 
