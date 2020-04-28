@@ -45,7 +45,7 @@ public class CatalogCommand extends Command {
 
 		List<Product> products = productDAO.findAllProduct(1, Integer.MAX_VALUE, gender, type);
 		String forward = Path.PAGE_ERROR;
-		if (products == null) {
+		if (products == null|| products.isEmpty()) {
 			session.setAttribute("isNullProduct", true);
 			return createForwardResult(forward);
 		}

@@ -42,19 +42,21 @@ public class UpdateCommand extends Command {
 			productId = Long.valueOf(request.getParameter("id"));
 		} catch (Exception e) {
 			log.error(Messages.ERR_REQUEST_ERROR + e);
-			throw new AppException(Messages.ERR_REQUEST_ERROR + e);
+			throw new AppException(Messages.ERR_REQUEST_ERROR, e);
 		}
 
 		Product product = productDAO.findProduct(productId);
 		log.trace("Find product in DB -->" + product);
 
-		if (request.getParameter("name") == null || request.getParameter("name").isEmpty()) {
+		String name = request.getParameter("name");
+		
+		if (name == null || name.isEmpty()) {
 			session.setAttribute("mutable", product);
 			return createForwardResult(Path.PAGE_UPDATE);
 		}
 
 		try {
-			product.setName(request.getParameter("name"));
+			product.setName(name);
 			product.setPrice(Integer.valueOf(request.getParameter("price")));
 			product.setSize(Integer.valueOf(request.getParameter("size")));
 			product.setQuantity(Integer.valueOf(request.getParameter("quantity")));
@@ -62,14 +64,13 @@ public class UpdateCommand extends Command {
 			product.setType(Type.values()[Integer.valueOf(request.getParameter("type"))]);
 			Part file = request.getPart("image");
 			byte[] bytesArray = new byte[(int)file.getSize()];
-			InputStream fis = file.getInputStream();
-			fis.read(bytesArray); 
-			fis.close();
+			try(InputStream fis = file.getInputStream()) {
+				fis.read(bytesArray);
+			}
 			product.setImage(new SerialBlob(bytesArray));
 		} catch (Exception e) {
-			log.error(Messages.ERR_CANNOT_UPDATE_PRODUCT);
-			e.printStackTrace();
-			throw new AppException(Messages.ERR_CANNOT_UPDATE_PRODUCT, e);
+			log.error(Messages.ERR_REQUEST_ERROR);
+			throw new AppException(Messages.ERR_REQUEST_ERROR, e);
 		}
 
 		productDAO.updateProduct(product);

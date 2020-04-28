@@ -38,6 +38,9 @@ public class DeleteProductCommand extends Command {
 		}
 		
 		Product product = productDAO.findProduct(id);
+		if(product == null) {
+			throw new AppException(Messages.ERR_CANNOT_OBTAIN_PRODUCT_BY_ID);
+		}
 		log.debug("Get product from db with id --> "+product.getId());
 		productDAO.deleteProduct(product);
 		log.debug("Product deleted");

@@ -22,9 +22,12 @@ public class ChangeLocaleCommand extends Command{
 		log.debug("Command start");
 		HttpSession session = request.getSession();
 		String newLocale = request.getParameter("newLocale");
+		if(newLocale == null || newLocale.isEmpty()) {
+			return createRedirectResult(request.getHeader("referer").toString().replaceAll("http://localhost:8080/SummaryTask", ""));
+		}
 		log.trace("Get request parameter: newLocale -->" + newLocale);
 		session.setAttribute("locale", newLocale);
-		log.trace("Session locale -->" + session.getAttribute("locale"));
+		log.trace("Session locale -->" + newLocale);
 		
 		log.debug("Command finish");
 		return createRedirectResult(request.getHeader("referer").toString().replaceAll("http://localhost:8080/SummaryTask", ""));

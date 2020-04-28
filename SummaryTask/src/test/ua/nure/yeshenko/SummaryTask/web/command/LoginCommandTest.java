@@ -1,5 +1,4 @@
-package test.ua.nure.yeshenko.SummaryTask.command;
-
+package test.ua.nure.yeshenko.SummaryTask.web.command;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,15 +11,14 @@ import ua.nure.yeshenko.SummaryTask.db.UserDAO;
 import ua.nure.yeshenko.SummaryTask.db.entity.Role;
 import ua.nure.yeshenko.SummaryTask.db.entity.User;
 import ua.nure.yeshenko.SummaryTask.web.command.Command;
-import ua.nure.yeshenko.SummaryTask.web.command.RegisterCommand;
+import ua.nure.yeshenko.SummaryTask.web.command.LoginCommand;
 
-class RegisterCommandTest {
-	
+class LoginCommandTest {
 	private HttpServletRequest request = mock(HttpServletRequest.class);
 	private HttpServletResponse response = mock(HttpServletResponse.class);
 	private HttpSession session = mock(HttpSession.class);
 	private UserDAO userDAO = mock(UserDAO.class);
-	private Command registerCommand = new RegisterCommand(userDAO);
+	private Command loginCommand = new LoginCommand(userDAO);
 	
 	@Test
 	void shouldDoSendingEmptyEmail() throws Exception {
@@ -29,29 +27,12 @@ class RegisterCommandTest {
 		
 		when(request.getSession()).thenReturn(session);
 		when(request.getParameter("email")).thenReturn(emptyField);
-		when(request.getParameter("name")).thenReturn(notEmptyField);
 		when(request.getParameter("password")).thenReturn(notEmptyField);
 		
-		registerCommand.execute(request, response);
+		loginCommand.execute(request, response);
 		
-		verify(session).setAttribute("isEmptyRegistration", true);
+		verify(session).setAttribute("isEmptyLogin", true);
 	}
-	
-	@Test
-	void shouldDoSendingEmptyName() throws Exception {
-		String emptyField = "";
-		String notEmptyField = "notEmptyField";
-		
-		when(request.getSession()).thenReturn(session);
-		when(request.getParameter("email")).thenReturn(notEmptyField);
-		when(request.getParameter("name")).thenReturn(emptyField);
-		when(request.getParameter("password")).thenReturn(notEmptyField);
-		
-		registerCommand.execute(request, response);
-		
-		verify(session).setAttribute("isEmptyRegistration", true);
-	}
-	
 	@Test
 	void shouldDoSendingEmptyPassword() throws Exception {
 		String emptyField = "";
@@ -59,56 +40,36 @@ class RegisterCommandTest {
 		
 		when(request.getSession()).thenReturn(session);
 		when(request.getParameter("email")).thenReturn(notEmptyField);
-		when(request.getParameter("name")).thenReturn(notEmptyField);
 		when(request.getParameter("password")).thenReturn(emptyField);
 		
-		registerCommand.execute(request, response);
+		loginCommand.execute(request, response);
 		
-		verify(session).setAttribute("isEmptyRegistration", true);
+		verify(session).setAttribute("isEmptyLogin", true);
 	}
-	
 	@Test
 	void shouldDoSendingNullEmail() throws Exception {
 		String notEmptyField = "notEmptyField";
 		
 		when(request.getSession()).thenReturn(session);
 		when(request.getParameter("email")).thenReturn(null);
-		when(request.getParameter("name")).thenReturn(notEmptyField);
 		when(request.getParameter("password")).thenReturn(notEmptyField);
 		
-		registerCommand.execute(request, response);
+		loginCommand.execute(request, response);
 		
-		verify(session).setAttribute("isEmptyRegistration", true);
+		verify(session).setAttribute("isEmptyLogin", true);
 	}
-	
-	@Test
-	void shouldDoSendingNullName() throws Exception {
-		String notEmptyField = "notEmptyField";
-		
-		when(request.getSession()).thenReturn(session);
-		when(request.getParameter("email")).thenReturn(notEmptyField);
-		when(request.getParameter("name")).thenReturn(null);
-		when(request.getParameter("password")).thenReturn(notEmptyField);
-		
-		registerCommand.execute(request, response);
-		
-		verify(session).setAttribute("isEmptyRegistration", true);
-	}
-	
 	@Test
 	void shouldDoSendingNullPassword() throws Exception {
 		String notEmptyField = "notEmptyField";
 		
 		when(request.getSession()).thenReturn(session);
 		when(request.getParameter("email")).thenReturn(notEmptyField);
-		when(request.getParameter("name")).thenReturn(notEmptyField);
 		when(request.getParameter("password")).thenReturn(null);
 		
-		registerCommand.execute(request, response);
+		loginCommand.execute(request, response);
 		
-		verify(session).setAttribute("isEmptyRegistration", true);
+		verify(session).setAttribute("isEmptyLogin", true);
 	}
-	
 	@Test
 	void shouldDoSendingInvalidEmail() throws Exception {
 		String invalidEmail = "Admin@";
@@ -119,13 +80,12 @@ class RegisterCommandTest {
 		when(request.getParameter("name")).thenReturn(notEmptyField);
 		when(request.getParameter("password")).thenReturn(notEmptyField);
 		
-		registerCommand.execute(request, response);
+		loginCommand.execute(request, response);
 		
-		verify(session).setAttribute("isWrongEmail", true);
+		verify(session).setAttribute("isInvalidEmail", true);
 	}
-	
 	@Test
-	void shouldCheckEmailInDataBase() throws Exception {
+	void shouldUploadNullUserFromDataBase() throws Exception {
 		String validEmail = "admin@a.aa";
 		String notEmptyField = "notEmptyField";
 		
@@ -134,16 +94,15 @@ class RegisterCommandTest {
 		when(request.getParameter("email")).thenReturn(validEmail);
 		when(request.getParameter("name")).thenReturn(notEmptyField);
 		when(request.getParameter("password")).thenReturn(notEmptyField);
-		when(userDAO.findUser(validEmail)).thenReturn(new User());
+		when(userDAO.findUser(validEmail)).thenReturn(null);
 		
-		registerCommand.execute(request, response);
+		loginCommand.execute(request, response);
 		
-		verify(session).setAttribute("isUserAlreadyExist", true);
+		verify(session).setAttribute("isIncorrectUser", true);
 	}
-	
 	@Test
-	void shouldUserRegister() throws Exception {
-		String validEmail = "test@test.test";
+	void shouldUploadUserFromDataBaseWrongPassword() throws Exception {
+		String validEmail = "admin@a.aa";
 		String notEmptyField = "notEmptyField";
 		
 		
@@ -152,15 +111,33 @@ class RegisterCommandTest {
 		when(request.getParameter("name")).thenReturn(notEmptyField);
 		when(request.getParameter("password")).thenReturn(notEmptyField);
 		User user = new User();
-		user.setEmail(validEmail);
+		user.setPassword(anyString());
+		when(userDAO.findUser(validEmail)).thenReturn(user);
+		
+		loginCommand.execute(request, response);
+		
+		verify(session).setAttribute("isIncorrectUser", true);
+	}
+	@Test
+	void shouldUserLogin() throws Exception {
+		String validEmail = "admin@a.aa";
+		String notEmptyField = "notEmptyField";
+		
+		
+		when(request.getSession()).thenReturn(session);
+		when(request.getParameter("email")).thenReturn(validEmail);
+		when(request.getParameter("name")).thenReturn(notEmptyField);
+		when(request.getParameter("password")).thenReturn(notEmptyField);
+		User user = new User();
+		user.setPassword(notEmptyField);
 		Role userRole = Role.CLIENT;
 		user.setRoleId(userRole.ordinal());
-		when(userDAO.findUser(validEmail)).thenReturn(null).thenReturn(user);
-		registerCommand.execute(request, response);
+		when(userDAO.findUser(validEmail)).thenReturn(user);
+		
+		loginCommand.execute(request, response);
 		
 		verify(session).setAttribute("user", user);
 		verify(session).setAttribute("userRole", userRole);
 	}
-	
-
+		
 }

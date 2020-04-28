@@ -42,7 +42,7 @@ public class ChangeQuantityCommand extends Command {
 			productId = Integer.valueOf((request.getParameter("id")));
 		} catch (Exception e) {
 			log.error(Messages.ERR_REQUEST_ERROR + e);
-			throw new AppException(Messages.ERR_REQUEST_ERROR + e);
+			throw new AppException(Messages.ERR_REQUEST_ERROR, e);
 		}
 		log.trace("Request parameter: id --> " + productId);
 
@@ -54,6 +54,9 @@ public class ChangeQuantityCommand extends Command {
 		} else if("add".equals(request.getParameter("change"))) {
 			cart.addItem(product);
 			productDAO.updateProduct(product, -1);
+		} else {
+			log.error(Messages.ERR_REQUEST_ERROR);
+			throw new AppException(Messages.ERR_REQUEST_ERROR);
 		}
 		log.trace("Update product in DB (change quantity)");
 

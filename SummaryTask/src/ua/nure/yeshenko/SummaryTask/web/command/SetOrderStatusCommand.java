@@ -48,10 +48,13 @@ public class SetOrderStatusCommand extends Command {
 		}
 		Order order = new Order();
 		order.setId(orderId);
-
+		order = orderDAO.findOrder(order);
+		log.trace("Find order in DB --> " + order);
+		if(order == null) {
+			log.error(Messages.ERR_CANNOT_OBTAIN_ORDER);
+			throw new AppException(Messages.ERR_CANNOT_OBTAIN_ORDER);
+		}
 		try {
-			order = orderDAO.findOrder(order);
-			log.trace("Find order in DB --> " + order);
 			order.setStatus(Status.valueOf(status.toUpperCase()));
 			orderDAO.updateOrder(order);
 		} catch (Exception e) {

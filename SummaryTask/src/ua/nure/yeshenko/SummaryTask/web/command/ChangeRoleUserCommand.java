@@ -36,7 +36,7 @@ public class ChangeRoleUserCommand extends Command {
 			userId = Long.valueOf(request.getParameter("id"));
 		} catch (Exception e) {
 			log.error(Messages.ERR_REQUEST_ERROR + e);
-			throw new AppException(Messages.ERR_REQUEST_ERROR + e);
+			throw new AppException(Messages.ERR_REQUEST_ERROR, e);
 		}
 		log.trace("Get request parameter: id --> " + userId);
 		
@@ -51,12 +51,12 @@ public class ChangeRoleUserCommand extends Command {
 		
 		if("true".equals(block)) {
 			user.setRoleId(Role.BLOCKED.ordinal());
-		} 
-		
-		if("false".equals(block)) {
+		} else if("false".equals(block)) {
 			user.setRoleId(Role.CLIENT.ordinal());
+		} else {
+			log.error(Messages.ERR_REQUEST_ERROR);
+			throw new AppException(Messages.ERR_REQUEST_ERROR);
 		}
-		
 		userDAO.updateUser(user);
 
 		log.debug("Command finish");

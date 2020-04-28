@@ -19,19 +19,22 @@ public class CartBean {
 			} else {
 				cart.put(product, cart.get(product) + 1);
 			}
-		}
+		} 
 	}
 
 	public void deleteItem(Product product) {
 		if (cart != null) {
-			cart.put(product, cart.get(product) - 1);
+			if(cart.get(product) != null) {
+				cart.put(product, cart.get(product) - 1);
+			}
 		}
 	}
 	
-	public void deleteItem(Product product, boolean bool) {
+	public Integer deleteItem(Product product, boolean bool) {
 		if (cart != null) {
-			cart.remove(product);
+			return cart.remove(product);
 		}
+		return null;
 	}
 
 	public Map<Product, Integer> getCart() {
@@ -77,8 +80,10 @@ public class CartBean {
 		for (Long l : getAllId()) {
 			buff.append(l + "&");
 		}
-
-		return buff.toString().substring(0, buff.length() - 1);
+		if(buff.length() > 0) {
+			return buff.toString().substring(0, buff.length() - 1);
+		} 
+		return buff.toString();
 	}
 
 }

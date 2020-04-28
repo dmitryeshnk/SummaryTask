@@ -29,6 +29,9 @@ public class GetImageCommand extends Command{
 		try {
 			int id = Integer.valueOf(request.getParameter("id"));
 			Product product = productDAO.findProduct(id);
+			if(product == null) {
+				throw new SQLException();
+			}
 			Blob blob = product.getImage();
 			response.setContentType("image/jpg");
 			response.getOutputStream().write(blob.getBytes(1, (int)blob.length()));

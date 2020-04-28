@@ -34,7 +34,7 @@ public class ChoiceCommand extends Command {
 		} else if (request.getParameter("break") != null && request.getParameter("break").equals("type")) {
 			session.setAttribute("type", null);
 			return createForwardResult(Path.PAGE_CHOICE);
-		}
+		} 
 
 		String gender = request.getParameter("gender");
 
@@ -46,7 +46,7 @@ public class ChoiceCommand extends Command {
 				log.trace("Set the session attribute: gender --> " + gender);
 			} catch(Exception ex) {
 				log.error(Messages.ERR_REQUEST_ERROR + ex);
-				throw new AppException(Messages.ERR_REQUEST_ERROR + ex);
+				throw new AppException(Messages.ERR_REQUEST_ERROR, ex);
 			}
 			return createForwardResult(Path.PAGE_CHOICE);
 		} else if (session.getAttribute("gender") == null) {
@@ -62,9 +62,9 @@ public class ChoiceCommand extends Command {
 			Type type_ = Type.valueOf(type.toUpperCase());
 			session.setAttribute("type", type_);
 			log.trace("Set the session attribute: type --> " + type_);
-		} catch(Exception ex) {
+		} catch(IllegalArgumentException ex) {
 			log.error(Messages.ERR_REQUEST_ERROR + ex);
-			throw new AppException(Messages.ERR_REQUEST_ERROR + ex);
+			throw new AppException(Messages.ERR_REQUEST_ERROR, ex);
 		}
 		log.debug("Command finish");
 		return createRedirectResult(Path.COMMAND_CATALOG);

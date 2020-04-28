@@ -51,7 +51,7 @@ public class ListOrderCommand extends Command {
 			orders = orderDAO.findAllOrders(user);
 		}
 		session.setAttribute("isOrderEmpty", false);
-		if (orders == null) {
+		if (orders == null|| orders.isEmpty()) {
 			session.setAttribute("isOrderEmpty", true);
 			log.trace("Set the session attribute: isOrderEmpty --> " + true);
 			return createForwardResult(Path.PAGE_LIST_ORDERS);

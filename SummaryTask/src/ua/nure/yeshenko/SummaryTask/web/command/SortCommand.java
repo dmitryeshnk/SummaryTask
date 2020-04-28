@@ -25,7 +25,7 @@ import static ua.nure.yeshenko.SummaryTask.util.RequestResponceUtil.createForwar
 public class SortCommand extends Command {
 	private static final Logger log = Logger.getLogger(SortCommand.class);
 	private ProductDAO productDAO;
-	
+
 	public SortCommand(ProductDAO productDAO) {
 		this.productDAO = productDAO;
 	}
@@ -37,6 +37,9 @@ public class SortCommand extends Command {
 		HttpSession session = request.getSession();
 		Gender gender = (Gender) session.getAttribute("gender");
 		Type type = (Type) session.getAttribute("type");
+		if(type == null || gender == null) {
+			return createForwardResult(Path.PAGE_CHOICE);
+		}
 		int fromPrice;
 		int toPrice;
 		try {
@@ -50,10 +53,15 @@ public class SortCommand extends Command {
 		} catch (Exception e) {
 			toPrice = Integer.MAX_VALUE;
 		}
+		log.trace("Get request parameter: from --> " + fromPrice);
 		List<Product> products = productDAO.findAllProduct(fromPrice, toPrice, gender, type);
-		
+
 		String sorter = request.getParameter("select");
 		log.trace("Selected sorter->" + sorter);
+		if (sorter == null || sorter.isEmpty()) {
+			session.setAttribute("products", products);
+			return createForwardResult(Path.PAGE_CATALOG);
+		}
 		CompareBy compare;
 		try {
 			compare = (CompareBy) Class.forName("ua.nure.yeshenko.SummaryTask.sort." + sorter.trim()).newInstance();

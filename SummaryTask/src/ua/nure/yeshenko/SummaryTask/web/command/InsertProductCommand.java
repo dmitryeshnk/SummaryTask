@@ -46,14 +46,13 @@ public class InsertProductCommand extends Command {
 			product.setType((Type) session.getAttribute("type"));
 			Part file = request.getPart("image");
 			byte[] bytesArray = new byte[(int)file.getSize()];
-			InputStream fis = file.getInputStream();
-			fis.read(bytesArray); 
-			fis.close();
+			try(InputStream fis = file.getInputStream()) {
+				fis.read(bytesArray);
+			}
 			product.setImage(new SerialBlob(bytesArray));
 		} catch (Exception e) {
 			log.error(Messages.ERR_CANNOT_INSERT_PRODUCT);
-			e.printStackTrace();
-			throw new AppException(Messages.ERR_CANNOT_UPDATE_PRODUCT, e);
+			throw new AppException(Messages.ERR_CANNOT_INSERT_PRODUCT, e);
 		}
 		
 		productDAO.insertProduct(product);

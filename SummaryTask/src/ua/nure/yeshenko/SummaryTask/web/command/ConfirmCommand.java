@@ -52,13 +52,16 @@ public class ConfirmCommand extends Command {
 			totalCost = Integer.valueOf(request.getParameter("total"));
 		} catch (Exception e) {
 			log.error(Messages.ERR_REQUEST_ERROR + e);
-			throw new AppException(Messages.ERR_REQUEST_ERROR + e);
+			throw new AppException(Messages.ERR_REQUEST_ERROR, e);
 		}
 		 
 		log.trace("Request parameter: total --> " + totalCost);
 
 		order.setCost(totalCost);
 		User user = (User) session.getAttribute("user");
+		if(user == null) {
+			return createForwardResult(Path.PAGE_LOGIN);
+		}
 		String city = request.getParameter("city");
 		log.trace("Request parameter: city --> " + city);
 		if (city == null || city.isEmpty()) {
@@ -70,9 +73,8 @@ public class ConfirmCommand extends Command {
 		order.setUser_id(user.getId());
 		order.setStatus(Status.REGISTERED);
 		order.setProductsId(cart.toString());
-
-		Savepoint save = null;
 		Connection con = null;
+		Savepoint save = null;
 		try {
 			con = DBManager.getConnection();
 			save = con.setSavepoint();

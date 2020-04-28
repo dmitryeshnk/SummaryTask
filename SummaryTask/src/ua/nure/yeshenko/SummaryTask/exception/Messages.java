@@ -56,5 +56,7 @@ public class Messages {
 	public static final String ERR_CANNOT_INSERT_PRODUCT = "Cannot insert the product";
 
 	public static final String ERR_CANNOT_DELETE_USER = "Cannot delete user";
+
+	public static final String ERR_CANNOT_OBTAIN_ORDER = "Cannot Obtain order";
 	
 }

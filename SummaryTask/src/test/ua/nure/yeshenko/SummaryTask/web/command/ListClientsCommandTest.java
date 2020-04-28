@@ -1,4 +1,4 @@
-package test.ua.nure.yeshenko.SummaryTask.command;
+package test.ua.nure.yeshenko.SummaryTask.web.command;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;

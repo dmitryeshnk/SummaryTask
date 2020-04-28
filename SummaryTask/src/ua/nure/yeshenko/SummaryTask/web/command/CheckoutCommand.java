@@ -4,6 +4,7 @@ import static ua.nure.yeshenko.SummaryTask.util.RequestResponceUtil.createForwar
 import static ua.nure.yeshenko.SummaryTask.util.RequestResponceUtil.createRedirectResult;
 
 import java.io.IOException;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +15,7 @@ import org.apache.log4j.Logger;
 
 import ua.nure.yeshenko.SummaryTask.Path;
 import ua.nure.yeshenko.SummaryTask.bean.CartBean;
+import ua.nure.yeshenko.SummaryTask.db.entity.Product;
 import ua.nure.yeshenko.SummaryTask.db.entity.Role;
 import ua.nure.yeshenko.SummaryTask.db.entity.User;
 import ua.nure.yeshenko.SummaryTask.exception.AppException;
@@ -40,7 +42,9 @@ public class CheckoutCommand extends Command{
 			throw new AppException(Messages.ERR_USER_IS_BLOCKED);
 		}
 		
-		if(CartBean.get(session).getCart().isEmpty()) {
+		CartBean cartBean = CartBean.get(session);
+		Map<Product, Integer> cart = cartBean.getCart();
+		if(cart.isEmpty()) {
 			session.setAttribute("isEmptyCart", true);
 			return createRedirectResult(Path.COMMAND_CART);
 		}

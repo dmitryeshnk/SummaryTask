@@ -45,13 +45,17 @@ public class OrderToCartCommand extends Command {
 			productId = Integer.valueOf(request.getParameter("id"));
 		} catch (Exception e) {
 			log.error(Messages.ERR_REQUEST_ERROR + e);
-			throw new AppException(Messages.ERR_REQUEST_ERROR + e);
+			throw new AppException(Messages.ERR_REQUEST_ERROR, e);
 		}
 
 		log.trace("Request parameter: id --> " + productId);
 
 		Product product = productDAO.findProduct(productId);
 		log.trace("Find product in DB -->" + product);
+		if(product == null) {
+			log.error(Messages.ERR_CANNOT_OBTAIN_PRODUCT_BY_ID);
+			throw new AppException(Messages.ERR_CANNOT_OBTAIN_PRODUCT_BY_ID);
+		}
 		cart.addItem(product);
 		productDAO.updateProduct(product, -cart.getCart().get(product));
 		log.trace("Update product in DB (change quantity)");
