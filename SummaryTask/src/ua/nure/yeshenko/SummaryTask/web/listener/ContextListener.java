@@ -48,9 +48,9 @@ public class ContextListener implements ServletContextListener, HttpSessionListe
 		} catch (NamingException e) {
 			log.error(Messages.ERR_CANNOT_OBTAIN_DATA_SOURCE);
 		}
-		servletContext.setAttribute("UserDAO", new UserDAO());
-		servletContext.setAttribute("ProductDAO", new ProductDAO());
-		servletContext.setAttribute("OrderDAO", new OrderDAO());
+		servletContext.setAttribute("UserDAO", UserDAO.getInstance());
+		servletContext.setAttribute("ProductDAO", ProductDAO.getInstance());
+		servletContext.setAttribute("OrderDAO", OrderDAO.getInstance());
 		servletContext.setAttribute("CommandContainer", new CommandContainer(servletContext));
 		log.debug("Servlet context initialization finished");
 	}

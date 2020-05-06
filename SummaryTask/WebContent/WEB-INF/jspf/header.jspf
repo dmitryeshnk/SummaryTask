@@ -1,3 +1,4 @@
+<%@include file='directive/taglib.jspf' %>
 <nav class="navbar navbar-expand-lg navbar-light bg-dark">
 	<a class="navbar-brand" href="#"> <img src="images/navbar.png"
 		width="30" height="30" alt="">
@@ -9,8 +10,6 @@
 	</button>
 	<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
 		<div class="navbar-nav">
-			<a class="nav-item nav-link active" href="index.jsp"><fmt:message
-					key="header_jspf.nav.home"  bundle="${bundle}"/><span class="sr-only">(current)</span></a>
 			<a class="nav-item nav-link" href="controller?command=catalog"><fmt:message
 					key="header_jspf.nav.catalog" bundle="${bundle}" /></a> <a class="nav-item nav-link"
 				href="controller?command=cart"><fmt:message

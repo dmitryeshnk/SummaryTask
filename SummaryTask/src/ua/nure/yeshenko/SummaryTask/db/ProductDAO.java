@@ -14,6 +14,17 @@ import ua.nure.yeshenko.SummaryTask.exception.DBException;
 import ua.nure.yeshenko.SummaryTask.exception.Messages;
 
 public class ProductDAO {
+	private static ProductDAO instance;
+	private ProductDAO() {
+	}
+	
+	public static ProductDAO getInstance() {
+		if(instance == null) {
+			instance = new ProductDAO();
+		}
+		return instance;
+	}
+	
 	private static final String SQL_FIND_PRODUCT_BY_ID = "SELECT * FROM products WHERE id=?";
 
 	private static final String SQL_FIND_PRODUCT_BY_NAME = "SELECT * FROM products WHERE name LIKE ?";

@@ -11,9 +11,10 @@ import ua.nure.yeshenko.SummaryTask.exception.DBException;
 import ua.nure.yeshenko.SummaryTask.exception.Messages;
 
 public class DBManager {
-
 	private static final Logger LOG = Logger.getLogger(DBManager.class);
 	private static DataSource dataSource;
+	private DBManager () {
+	}
 	/**
 	 * Returns a DB connection from the Pool Connections. Before using this
 	 * method you must configure the Date Source and the Connections Pool in

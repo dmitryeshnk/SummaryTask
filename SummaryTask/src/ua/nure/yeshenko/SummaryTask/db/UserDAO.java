@@ -13,6 +13,16 @@ import ua.nure.yeshenko.SummaryTask.exception.DBException;
 import ua.nure.yeshenko.SummaryTask.exception.Messages;
 
 public class UserDAO {
+	private static UserDAO instance;
+	private UserDAO() {
+	}
+	
+	public static UserDAO getInstance() {
+		if(instance == null) {
+			instance = new UserDAO();
+		}
+		return instance;
+	}
 	private static final String SQL_CREATE_USER = "INSERT INTO users VALUES (DEFAULT, ?, ?, ?, 1, NULL)";
 
 	private static final String SQL_FIND_USER_BY_EMAIL = "SELECT * FROM users WHERE email=?";

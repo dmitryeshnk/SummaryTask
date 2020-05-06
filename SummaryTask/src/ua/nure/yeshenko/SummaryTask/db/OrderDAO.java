@@ -15,6 +15,18 @@ import ua.nure.yeshenko.SummaryTask.exception.DBException;
 import ua.nure.yeshenko.SummaryTask.exception.Messages;
 
 public class OrderDAO {
+	private static OrderDAO instance;
+	private OrderDAO() {
+		
+	}
+	
+	public static OrderDAO getInstance() {
+		if(instance == null) {
+			instance = new OrderDAO();
+		}
+		return instance;
+	}
+	
 	private static final String SQL_FIND_ORDER_BY_ID = "SELECT * FROM orders WHERE id=?";
 
 	private static final String SQL_FIND_ALL_ORDERS = "SELECT * FROM orders ORDER BY id DESC";
