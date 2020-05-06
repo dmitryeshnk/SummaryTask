@@ -1,5 +1,4 @@
 <?xml version="1.0"?>
-
 <context>
 
 	<Resource name="jdbc/root" auth="Container"
