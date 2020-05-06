@@ -2,11 +2,6 @@ package ua.nure.yeshenko.SummaryTask.db.entity;
 
 public class Order extends Entity{
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -289320117622915135L;
-	
 	private int cost;
 	
 	private Long user_id;

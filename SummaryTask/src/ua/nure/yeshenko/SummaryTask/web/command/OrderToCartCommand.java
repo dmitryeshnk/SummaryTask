@@ -56,8 +56,12 @@ public class OrderToCartCommand extends Command {
 			log.error(Messages.ERR_CANNOT_OBTAIN_PRODUCT_BY_ID);
 			throw new AppException(Messages.ERR_CANNOT_OBTAIN_PRODUCT_BY_ID);
 		}
+		if(product.getQuantity() <= 0) {
+			return createRedirectResult(Path.COMMAND_CATALOG);
+		}
+		product.setQuantity(product.getQuantity() - 1);
 		cart.addItem(product);
-		productDAO.updateProduct(product, -cart.getCart().get(product));
+		productDAO.updateProduct(product, product.getQuantity());
 		log.trace("Update product in DB (change quantity)");
 
 		session.setAttribute("cart", cart);

@@ -43,7 +43,7 @@
 		<filter-class>ua.nure.yeshenko.SummaryTask.web.filter.CommandAccessFilter</filter-class>
 		<init-param>
 			<param-name>admin</param-name>
-			<param-value>listClients insertProduct updateProduct confirm orderStatus deleteProduct</param-value>
+			<param-value>listClients insertProduct updateProduct confirm orderStatus deleteProduct changeRole</param-value>
 		</init-param>
 		<init-param>
 			<param-name>client</param-name>

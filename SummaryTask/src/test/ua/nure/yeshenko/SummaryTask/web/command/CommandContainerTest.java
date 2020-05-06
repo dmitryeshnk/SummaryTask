@@ -1,17 +1,16 @@
 package test.ua.nure.yeshenko.SummaryTask.web.command;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import javax.servlet.ServletContext;
 
 import org.junit.jupiter.api.Test;
 
-
 import ua.nure.yeshenko.SummaryTask.db.OrderDAO;
 import ua.nure.yeshenko.SummaryTask.db.ProductDAO;
 import ua.nure.yeshenko.SummaryTask.db.UserDAO;
-import ua.nure.yeshenko.SummaryTask.web.command.CatalogCommand;
 import ua.nure.yeshenko.SummaryTask.web.command.Command;
 import ua.nure.yeshenko.SummaryTask.web.command.CommandContainer;
 import ua.nure.yeshenko.SummaryTask.web.command.LogoutCommand;

@@ -14,19 +14,16 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.junit.jupiter.api.Test;
 
 import ua.nure.yeshenko.SummaryTask.Path;
-import ua.nure.yeshenko.SummaryTask.db.entity.Role;
 import ua.nure.yeshenko.SummaryTask.web.filter.CommandAccessFilter;
 
 class CommandAccessFilterTest {
 	private FilterConfig fConfig = mock(FilterConfig.class);
 	private HttpServletRequest request = mock(HttpServletRequest.class);
 	private HttpServletResponse response = mock(HttpServletResponse.class);
-	private HttpSession session = mock(HttpSession.class);
 	private FilterChain chain = mock(FilterChain.class);
 	private RequestDispatcher dispatcher = mock(RequestDispatcher.class);
 	private CommandAccessFilter filter = new CommandAccessFilter();

@@ -50,7 +50,7 @@
 													type="button" class="btn btn-outline-dark btn-qt">-</a>
 											</c:if>
 											<c:out value="${inCart.value}" />
-											<c:if test="${inCart.value < inCart.key.quantity }">
+											<c:if test="${inCart.value <= inCart.key.quantity}">
 												<a
 													href="controller?command=changeQuantity&id=${inCart.key.id }&change=add"
 													type="button" class="btn btn-outline-dark btn-qt">+</a>

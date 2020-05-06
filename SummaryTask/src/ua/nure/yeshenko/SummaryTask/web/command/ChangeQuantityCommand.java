@@ -22,18 +22,18 @@ import ua.nure.yeshenko.SummaryTask.model.RequestResult;
 public class ChangeQuantityCommand extends Command {
 	private static final Logger log = Logger.getLogger(ChangeQuantityCommand.class);
 	private ProductDAO productDAO;
-	
+
 	public ChangeQuantityCommand(ProductDAO productDAO) {
 		this.productDAO = productDAO;
 	}
 
 	@Override
-	public RequestResult execute(HttpServletRequest request,
-			HttpServletResponse response) throws IOException, ServletException {
+	public RequestResult execute(HttpServletRequest request, HttpServletResponse response)
+			throws IOException, ServletException {
 		log.debug("Command start");
 		HttpSession session = request.getSession();
 		CartBean cart = CartBean.get(session);
-		if(cart.getCart().isEmpty()) {
+		if (cart.getCart().isEmpty()) {
 			log.error(Messages.ERR_REQUEST_ERROR);
 			throw new AppException(Messages.ERR_REQUEST_ERROR);
 		}
@@ -48,16 +48,21 @@ public class ChangeQuantityCommand extends Command {
 
 		Product product = productDAO.findProduct(productId);
 		log.trace("Find product in DB -->" + product);
-		if("subtract".equals(request.getParameter("change"))) {
+		if ("subtract".equals(request.getParameter("change"))) {
+			product.setQuantity(product.getQuantity() + 1);
 			cart.deleteItem(product);
-			productDAO.updateProduct(product, 1);
-		} else if("add".equals(request.getParameter("change"))) {
+			log.trace("cart.get() " + cart.getCart().get(product));
+			log.trace("product.getQuantity() " + product.getQuantity());
+		} else if ("add".equals(request.getParameter("change"))) {
+			product.setQuantity(product.getQuantity() - 1);
 			cart.addItem(product);
-			productDAO.updateProduct(product, -1);
+			log.trace("cart.get() " + cart.getCart().get(product));
+			log.trace("product.getQuantity() " + product.getQuantity());
 		} else {
 			log.error(Messages.ERR_REQUEST_ERROR);
 			throw new AppException(Messages.ERR_REQUEST_ERROR);
 		}
+		productDAO.updateProduct(product, product.getQuantity());
 		log.trace("Update product in DB (change quantity)");
 
 		session.setAttribute("cart", cart);

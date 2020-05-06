@@ -6,7 +6,7 @@
 <body>
 	<%@ include file="/WEB-INF/jspf/header.jspf"%>
 	<div class="content">
-		<%@ include file="/WEB-INF/jspf/seacher.jsp"%>
+		<%@ include file="/WEB-INF/jspf/seacher.jspf"%>
 		<c:if test="${empty gender }">
 			<div class="gender">
 				<div class="female">

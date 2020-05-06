@@ -18,6 +18,7 @@ import ua.nure.yeshenko.SummaryTask.db.entity.Role;
 import ua.nure.yeshenko.SummaryTask.db.entity.User;
 import ua.nure.yeshenko.SummaryTask.model.RequestResult;
 import ua.nure.yeshenko.SummaryTask.util.EmailValidator;
+import ua.nure.yeshenko.SummaryTask.util.Util;
 
 public class RegisterCommand extends Command {
 	private static final Logger log = Logger.getLogger(RegisterCommand.class);
@@ -41,7 +42,7 @@ public class RegisterCommand extends Command {
 		String name = request.getParameter("name");
 
 		String password = request.getParameter("password");
-
+		
 		if ((email == null | password == null | name == null) || (email.isEmpty() | name.isEmpty() 
 				| password.isEmpty())) {
 			session.setAttribute("isEmptyRegistration", true);
@@ -63,7 +64,8 @@ public class RegisterCommand extends Command {
 		User user = new User();
 		user.setEmail(email);
 		user.setName(name);
-		user.setPassword(password);
+		System.out.println(Util.hash(password, "SHA-256"));
+		user.setPassword(Util.hash(password, "SHA-256"));
 		userDAO.createUser(user);
 		log.info("User " + user.getEmail() + " registered.");
 

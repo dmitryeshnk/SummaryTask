@@ -22,11 +22,14 @@ public class ProductDAO {
 
 	private static final String SQL_UPDATE_PRODUCT_QUANTITY = "UPDATE products SET quantity=? WHERE id=?";
 
-	private static final String SQL_UPDATE_PRODUCT = "UPDATE products SET name=?, type=?, size=?, gender=?, price=?, quantity=?, image=? WHERE id=?";
+	private static final String SQL_UPDATE_PRODUCT = "UPDATE products SET image=?, name=?, type=?, size=?, gender=?, price=?, quantity=? WHERE id=?";
+	
+	private static final String SQL_UPDATE_PRODUCT_WITHOUT_IMAGE = "UPDATE products SET name=?, type=?, size=?, gender=?, price=?, quantity=? WHERE id=?";
 
 	private static final String SQL_INSERT_PRODUCT = "INSERT INTO products VALUES(DEFAULT, ?, ?, ?, ?, ?, ?, ?)";
 	
 	private static final String SQL_DELETE_PRODUCT = "DELETE FROM products WHERE id = ?";
+
 
 	/**
 	 * Returns a product with the given identifier.
@@ -123,8 +126,9 @@ public class ProductDAO {
 	public void updateProduct(Product product, int quantity) throws DBException {
 		try (Connection con = DBManager.getConnection();
 				PreparedStatement pstmt = con.prepareStatement(SQL_UPDATE_PRODUCT_QUANTITY)) {
-			pstmt.setInt(1, product.getQuantity() + quantity);
-			pstmt.setLong(2, product.getId());
+			int k = 1;
+			pstmt.setInt(k++, quantity);
+			pstmt.setLong(k, product.getId());
 			pstmt.executeUpdate();
 			con.commit();
 		} catch (SQLException ex) {
@@ -139,16 +143,21 @@ public class ProductDAO {
 	 * @throws DBException
 	 */
 	public void updateProduct(Product product) throws DBException {
-		try (Connection con = DBManager.getConnection();
-				PreparedStatement pstmt = con.prepareStatement(SQL_UPDATE_PRODUCT)) {
+		try (Connection con = DBManager.getConnection()) {
+			PreparedStatement pstmt = null;
 			int k = 1;
+			if(product.getImage() == null) {
+				pstmt = con.prepareStatement(SQL_UPDATE_PRODUCT_WITHOUT_IMAGE);
+			} else {
+				pstmt = con.prepareStatement(SQL_UPDATE_PRODUCT);
+				pstmt.setBlob(k++, product.getImage());
+			}
 			pstmt.setString(k++, product.getName());
 			pstmt.setInt(k++, product.getType().ordinal());
 			pstmt.setInt(k++, product.getSize());
 			pstmt.setInt(k++, product.getGender().ordinal());
 			pstmt.setInt(k++, product.getPrice());
 			pstmt.setInt(k++, product.getQuantity());
-			pstmt.setBlob(k++, product.getImage());
 			pstmt.setLong(k++, product.getId());
 			pstmt.executeUpdate();
 			con.commit();

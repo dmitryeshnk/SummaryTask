@@ -57,15 +57,19 @@ public class ContextListener implements ServletContextListener, HttpSessionListe
 
 	@Override
 	public void sessionDestroyed(HttpSessionEvent se) {
-		ProductDAO manager;
+		log.debug("sessionDestroyed start");
 		try {
-			manager = (ProductDAO) se.getSession().getServletContext().getAttribute("ProductDAO");
-			CartBean.get(se.getSession()).getCart().forEach((k, v) -> manager.updateProduct(k, v));
+			ProductDAO manager = (ProductDAO) se.getSession().getServletContext().getAttribute("ProductDAO");
+			CartBean cart = CartBean.get(se.getSession());
+			cart.getCart().forEach((k, v) -> {
+				manager.updateProduct(k, k.getQuantity() + 1);
+				log.trace("key " + k.getQuantity());
+				log.trace("value " + v);
+			});
 		} catch (DBException e1) {
 			e1.printStackTrace();
 		}
-		se.getSession().setAttribute("inside", 0);
-		System.out.println("Destroy session");
+		log.debug("sessionDestroyed finish");
 	}
 	
 

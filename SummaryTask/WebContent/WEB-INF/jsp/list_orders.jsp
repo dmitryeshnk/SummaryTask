@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <%@ include file="/WEB-INF/jspf/head.jspf"%>
+<%@ taglib prefix="tag" tagdir="/WEB-INF/tags/"%>   
 <c:set var="title" value="All Orders" />
 </head>
 <body>
@@ -41,10 +42,11 @@
 								<td>${order.user_id }</td>
 							</c:if>
 							<td>${order.status.name }</td>
-							<td><c:forEach items="${productsId[order.id]}" var="product">
-									<img alt="" src="controller?command=getImage&id=${product.id }"
-										width="100" height="100"> ${product.name }<br>
-								</c:forEach></td>
+							<td>
+							<c:forEach items="${productsId[order.id]}" var="product">
+								<tag:products product="${product }"/>
+							</c:forEach>
+							</td>
 							<c:if test="${userRole.name == 'admin' }">
 								<c:if test="${order.status.name == 'registered'}">
 									<td><a

@@ -49,7 +49,7 @@ public class UpdateCommand extends Command {
 		log.trace("Find product in DB -->" + product);
 
 		String name = request.getParameter("name");
-		
+
 		if (name == null || name.isEmpty()) {
 			session.setAttribute("mutable", product);
 			return createForwardResult(Path.PAGE_UPDATE);
@@ -63,11 +63,19 @@ public class UpdateCommand extends Command {
 			product.setGender(Gender.values()[Integer.valueOf(request.getParameter("gender"))]);
 			product.setType(Type.values()[Integer.valueOf(request.getParameter("type"))]);
 			Part file = request.getPart("image");
-			byte[] bytesArray = new byte[(int)file.getSize()];
-			try(InputStream fis = file.getInputStream()) {
-				fis.read(bytesArray);
+			if (file.getSize() != 0) {
+				byte[] bytesArray = new byte[(int) file.getSize()];
+				try (InputStream fis = file.getInputStream()) {
+					fis.read(bytesArray);
+				}
+				product.setImage(new SerialBlob(bytesArray));
+			} else {
+				product.setImage(null);
 			}
-			product.setImage(new SerialBlob(bytesArray));
+			if (product.getPrice() < 0 || product.getSize() < 30 || product.getSize() > 50
+					|| product.getQuantity() < 0) {
+				throw new AppException(Messages.ERR_REQUEST_ERROR);
+			}
 		} catch (Exception e) {
 			log.error(Messages.ERR_REQUEST_ERROR);
 			throw new AppException(Messages.ERR_REQUEST_ERROR, e);

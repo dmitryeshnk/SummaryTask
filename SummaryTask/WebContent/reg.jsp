@@ -32,7 +32,7 @@
 						<div class="under">
 							<input type="submit" class="btn btn-primary" value="<fmt:message key="reg_jsp.anchor.register" bundle="${bundle}"/>">
 							<div class="alert alert-ligth" role="alert">
-								<fmt:message key="reg_jsp.anchor.haveAccount" /> <a href="login.jsp" class="alert-link"><fmt:message key="reg_jsp.anchor.login" bundle="${bundle}"/></a>.
+								<fmt:message key="reg_jsp.anchor.haveAccount" bundle="${bundle}"/> <a href="login.jsp" class="alert-link"><fmt:message key="reg_jsp.anchor.login" bundle="${bundle}"/></a>.
 							</div>
 						</div>
 						<c:if test="${isWrongEmail}">

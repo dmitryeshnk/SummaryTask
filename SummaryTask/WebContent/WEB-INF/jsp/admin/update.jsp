@@ -57,7 +57,7 @@
 			<div class="form-group">
 				<label for="inputQuantity"><fmt:message
 						key="update_jsp.form.quantity" bundle="${bundle}" /></label> <input
-					type="number" min="1" class="form-control" id="inputQuantity"
+					type="number" min="0" class="form-control" id="inputQuantity"
 					value="${mutable.quantity}" name="quantity">
 			</div>
 			<div class="form-group">

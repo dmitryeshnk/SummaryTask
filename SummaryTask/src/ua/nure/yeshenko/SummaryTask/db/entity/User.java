@@ -2,7 +2,6 @@ package ua.nure.yeshenko.SummaryTask.db.entity;
 
 
 public class User extends Entity{
-	private static final long serialVersionUID = 5063438894454818624L;
 
 	private String name;
 	

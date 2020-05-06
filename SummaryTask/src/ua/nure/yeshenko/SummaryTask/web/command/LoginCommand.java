@@ -18,6 +18,7 @@ import ua.nure.yeshenko.SummaryTask.db.entity.Role;
 import ua.nure.yeshenko.SummaryTask.db.entity.User;
 import ua.nure.yeshenko.SummaryTask.model.RequestResult;
 import ua.nure.yeshenko.SummaryTask.util.EmailValidator;
+import ua.nure.yeshenko.SummaryTask.util.Util;
 
 public class LoginCommand extends Command {
 	private static final Logger log = Logger.getLogger(LoginCommand.class);
@@ -52,7 +53,7 @@ public class LoginCommand extends Command {
 		User user = userDAO.findUser(email);
 		log.trace("Found in DB: user --> " + user);
 		
-		if (user == null || !password.equals(user.getPassword())) {
+		if (user == null || !Util.hash(password, "SHA-256").equals(user.getPassword())) {
 			session.setAttribute("isIncorrectUser", true);
 			log.trace("Cannot find user with such email/password");
 			return createForwardResult(Path.PAGE_LOGIN);

@@ -1,15 +1,23 @@
 package ua.nure.yeshenko.SummaryTask.db.entity;
 
-import java.io.Serializable;
-
 /**
  * Root of all entities which have identifier field.
  * 
  * @author D.Yeshenko
  * 
  */
-public abstract class Entity implements Serializable {
+public abstract class Entity {
+	
+	private Long id;
 
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -34,17 +42,4 @@ public abstract class Entity implements Serializable {
 			return false;
 		return true;
 	}
-
-	private static final long serialVersionUID = -5409103447475388669L;
-	
-	private Long id;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
 }

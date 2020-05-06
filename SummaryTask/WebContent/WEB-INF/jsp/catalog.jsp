@@ -6,15 +6,15 @@
 <body>
 	<%@ include file="/WEB-INF/jspf/header.jspf"%>
 	<div class="content">
-		<%@ include file="/WEB-INF/jspf/seacher.jsp"%>
+		<%@ include file="/WEB-INF/jspf/seacher.jspf"%>
 		<div aria-label="breadcrumb">
 			<ol class="breadcrumb">
 				<li class="breadcrumb-item"><a
-					href="controller?command=choice&break=gender"><c:out
-							value="${gender.name}" /></a></li>
+					href="controller?command=choice&break=gender"><fmt:message
+							key="catalog_jsp.anchor.gender" bundle="${bundle}" /></a></li>
 				<li class="breadcrumb-item"><a
-					href="controller?command=choice&break=type"><c:out
-							value="${type.name}" /></a></li>
+					href="controller?command=choice&break=type"><fmt:message
+							key="catalog_jsp.anchor.type" bundle="${bundle}" /></a></li>
 			</ol>
 		</div>
 		<form class="sorter" method="post" action="controller">
@@ -52,7 +52,8 @@
 		<c:if test="${userRole.name == 'admin' }">
 			<div id="Insert"
 				title="<fmt:message key="catalog_jsp.insert.title" bundle="${bundle}"/>">
-				<form class="form-insert" method="post" action="controller" enctype="multipart/form-data">
+				<form class="form-insert" method="post" action="controller"
+					enctype="multipart/form-data">
 					<div class="form-group">
 						<label for="name"><fmt:message
 								key="catalog_jsp.insert.nameOfProduct" bundle="${bundle}" /></label> <input
@@ -168,16 +169,6 @@
 								<td><c:out value="${product.gender}" /></td>
 								<td><c:out value="${product.quantity}" /></td>
 							</c:if>
-							<td><c:if test="${product.quantity == 0 }">
-									<button class="btn btn-success" disabled>
-										<fmt:message key="catalog_jsp.table.order" bundle="${bundle}" />
-									</button>
-								</c:if> <c:if test="${product.quantity != 0 }">
-									<button class="btn btn-success"
-										onclick="window.location.href = 'controller?command=orderCart&id=${product.id}';">
-										<fmt:message key="catalog_jsp.table.order" bundle="${bundle}" />
-									</button>
-								</c:if></td>
 							<td width=50px><c:set var="check" value="${true }" /> <c:forEach
 									items="${cart.cart }" var="inCart">
 									<c:if test="${inCart.key.id == product.id && check}">
@@ -191,6 +182,16 @@
 										<fmt:message key="catalog_jsp.table.notAvailable"
 											bundle="${bundle}" />
 									</p>
+								</c:if></td>
+							<td><c:if test="${product.quantity <= 0 }">
+									<button class="btn btn-success" disabled>
+										<fmt:message key="catalog_jsp.table.order" bundle="${bundle}" />
+									</button>
+								</c:if> <c:if test="${product.quantity > 0 }">
+									<button class="btn btn-success"
+										onclick="window.location.href = 'controller?command=orderCart&id=${product.id}';">
+										<fmt:message key="catalog_jsp.table.order" bundle="${bundle}" />
+									</button>
 								</c:if></td>
 							<c:if test="${userRole.name == 'admin' }">
 								<td>

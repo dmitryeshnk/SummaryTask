@@ -6,7 +6,6 @@ public class Product extends Entity {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 3007963150145571578L;
 	private String name;
 	private Type type;
 	private int size;

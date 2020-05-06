@@ -57,7 +57,8 @@ public class DeleteFromCartCommand extends Command {
 			log.error(Messages.ERR_REQUEST_ERROR);
 			throw new AppException(Messages.ERR_REQUEST_ERROR);
 		}
-		productDAO.updateProduct(product, count);
+		product.setQuantity(product.getQuantity() + count);
+		productDAO.updateProduct(product, product.getQuantity());
 		log.trace("Update product in DB (change quantity)");
 
 		session.setAttribute("cart", cart);
