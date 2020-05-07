@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
-<%@ include file="/WEB-INF/jspf/head.jspf"%>
+<%@include file='/WEB-INF/jspf/directive/taglib.jspf' %>
 <c:set var="title" value="Cart" />
+<%@ include file="/WEB-INF/jspf/head.jspf"%>
 </head>
 <body>
 	<%@ include file="/WEB-INF/jspf/header.jspf"%>
@@ -37,7 +38,7 @@
 							<c:forEach items="${cart.cart}" var="inCart">
 								<tr>
 									<td class="table_Image"><img alt=""
-										src="controller?command=getImage&id=${product.id }"
+										src="controller?command=getImage&id=${inCart.key.id }"
 										width="300" height="300"></td>
 									<td class="table_Image"><c:out value="${inCart.key.name}" /></td>
 									<td><c:out value="${inCart.key.size}" /></td>

@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
-<%@ include file="/WEB-INF/jspf/head.jspf"%>
+<%@include file='/WEB-INF/jspf/directive/taglib.jspf' %>
 <c:set var="title" value="Error" />
+<%@ include file="/WEB-INF/jspf/head.jspf"%>
 <body>
 	<table id="main-container">
 

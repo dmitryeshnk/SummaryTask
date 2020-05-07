@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
+<%@include file='/WEB-INF/jspf/directive/taglib.jspf' %>
+<c:set var="title" value="Orders" />
 <%@ include file="/WEB-INF/jspf/head.jspf"%>
-<%@ taglib prefix="tag" tagdir="/WEB-INF/tags/"%>   
-<c:set var="title" value="All Orders" />
+<%@ taglib prefix="tag" tagdir="/WEB-INF/tags/"%>  
 </head>
 <body>
 	<%@ include file="/WEB-INF/jspf/header.jspf"%>

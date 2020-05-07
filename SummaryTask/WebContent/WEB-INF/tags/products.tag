@@ -1,4 +1,3 @@
-<%@include file='/WEB-INF/jspf/directive/taglib.jspf'%>
 <%@ attribute name="product" required="true" rtexprvalue="true"
 	type="ua.nure.yeshenko.SummaryTask.db.entity.Product"%>
 
